@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './App.css'
 import Login from './login'
 import Formularios from './formularios'
+import Formulario from './formulario'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 class App extends Component {
@@ -28,7 +29,7 @@ class App extends Component {
             <div />
           </Route>
           <Route path='/formulario/'>
-            <div />
+            <Formulario />
           </Route>
           <Route path=''>
             <Login onLogin={this.onLogin} />
