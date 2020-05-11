@@ -26,20 +26,24 @@ class CartaoPergunta extends Component {
 
   render () {
     return (
-      <div id={this.props.id}>
-        <input onClick={this.props.onSelect} data-id={this.props.id} type='radio' name='selected' />
-        <div>
-          <label htmlFor={'question' + this.props.id}>Questão {1 + this.props.index}</label>
-          <input id={'question' + this.props.id} type='text' onChange={this.onChangeQuestion} />
+      <div id={this.props.id} className='auto-generated'>
+        <div className='div-left'>
+          <input onClick={this.props.onSelect} data-id={this.props.id} type='radio' name='selected' />
         </div>
-        <div>
-          {this.state.components.map((item, key) => {
-            return (
-              <div key={key}>
-                {item}
-              </div>
-            )
-          })}
+        <div className='div-right'>
+          <div className='question-text-div'>
+            <label className='question-label' htmlFor={'question' + this.props.id}>Questão {1 + this.props.index}</label>
+            <input className='input-text' id={'question' + this.props.id} type='text' onChange={this.onChangeQuestion} />
+          </div>
+          <div>
+            {this.state.components.map((item, key) => {
+              return (
+                <div className='question-component-div' key={key}>
+                  {item}
+                </div>
+              )
+            })}
+          </div>
         </div>
       </div>
     )

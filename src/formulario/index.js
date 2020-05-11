@@ -131,6 +131,12 @@ class Formulario extends Component {
             <button onClick={(e) => { this.onAddAnswer(e, 'radio') }}>
               Adicionar radiobox
             </button>
+            <button onClick={(e) => { this.onAddAnswer(e, 'date') }}>
+              Adicionar campo data
+            </button>
+            <button onClick={(e) => { this.onAddAnswer(e, 'file') }}>
+              Adicionar carregar arquivo
+            </button>
           </div>
         </div>
         <div>

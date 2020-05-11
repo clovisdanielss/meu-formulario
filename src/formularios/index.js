@@ -71,34 +71,34 @@ class Formularios extends Component {
 
   render () {
     return (
-      <div>
+      <div className='container'>
         <div>
-          <div>
+          <div className='table-button'>
             <Link to='/formulario'>
               <button>
                 Criar
               </button>
             </Link>
           </div>
-          <div>
+          <div className='table-button'>
             <Link onClick={this.onEmptySelection} to={this.onEditPath}>
               <button>
                 Editar
               </button>
             </Link>
           </div>
-          <div>
+          <div className='table-button'>
             <Link onClick={this.onRemove} to='/formularios'>
               <button>
                 Remover
               </button>
             </Link>
           </div>
-          <div>
+          <div className='table-search'>
             <input type='text' />
           </div>
         </div>
-        <div>
+        <div className='table-div'>
           <table>
             <thead>
               <tr>
