@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import CartaoPergunta from './cartao-pergunta'
-import CustomInput from './custom-input'
+import { Link } from 'react-router-dom'
 
 class Formulario extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      titulo: '',
       questions: [],
       questionsId: 0,
       componentsId: 0,
-      references: {},
       selected: null
     }
     this.onAddQuestion = this.onAddQuestion.bind(this)
@@ -18,6 +18,22 @@ class Formulario extends Component {
     this.onSelect = this.onSelect.bind(this)
     this.onChangeQuestion = this.onChangeQuestion.bind(this)
     this.onChangeComponent = this.onChangeComponent.bind(this)
+    this.onSave = this.onSave.bind(this)
+    this.onChangeTitle = this.onChangeTitle.bind(this)
+  }
+
+  onSave () {
+    const form = {
+      titulo: this.state.titulo,
+      questions: this.state.questions
+    }
+    this.props.onFakeSave(form)
+  }
+
+  onChangeTitle (e) {
+    this.setState({
+      titulo: e.target.value
+    })
   }
 
   onSelect (e) {
@@ -32,24 +48,17 @@ class Formulario extends Component {
       title: '',
       components: []
     })
-    this.state.references[this.state.questionsId] = React.createRef()
     this.setState({ questionsId: this.state.questionsId + 1 })
   }
 
   onAddComponent (e, type) {
     if (this.state.selected) {
-      this.state.references[this.state.selected].current.onAdd(<CustomInput
-        id={this.state.componentsId}
-        type={type}
-        onChangeComponent={this.onChangeComponent}
-        questionId={this.state.selected}
-      />)
       this.state.questions.map((question) => {
         if (question.id == this.state.selected) {
           question.components.push({
             id: this.state.componentsId,
             type: type,
-            text: ''
+            data: ''
           })
         }
       })
@@ -71,7 +80,6 @@ class Formulario extends Component {
           next = this.state.questions[key + 1].id
         }
       })
-      delete this.state.references[this.state.selected]
       this.setState({
         questions: questions,
         selected: next
@@ -85,7 +93,7 @@ class Formulario extends Component {
     this.state.questions.map((question) => {
       question.components.map((component) => {
         if (component.id == id) {
-          component.text = text
+          component.data = text
         }
       })
     })
@@ -135,13 +143,19 @@ class Formulario extends Component {
             <button onClick={(e) => { this.onAddComponent(e, 'file') }}>
               Adicionar carregar arquivo
             </button>
+            <Link to='/formularios' onClick={this.onSave}>
+              <button>
+              Salvar
+              </button>
+            </Link>
           </div>
         </div>
         <div>
           <div>
             <h3>
-            Formulário
+              Título
             </h3>
+            <input onChange={this.onChangeTitle} />
             <hr />
           </div>
           <div>
@@ -149,12 +163,12 @@ class Formulario extends Component {
               console.log(question)
               return (
                 <CartaoPergunta
-                  ref={this.state.references[question.id]}
                   id={question.id}
                   index={key}
                   key={key}
                   onSelect={this.onSelect}
                   onChangeQuestion={this.onChangeQuestion}
+                  onChangeComponent={this.onChangeComponent}
                   question={question}
                 />
               )

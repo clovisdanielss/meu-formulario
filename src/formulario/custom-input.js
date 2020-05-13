@@ -3,50 +3,43 @@ import React, { Component } from 'react'
 class CustomInput extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      id: props.id,
-      text: '',
-      type: props.type ? props.type : 'checkbox'
-    }
 
     this.onChange = this.onChange.bind(this)
   }
 
   onChange (e) {
-    if (this.state.type !== 'file') {
-      this.setState({
-        text: e.target.value
-      })
-      this.props.onChangeComponent(this.state.id, e.target.value)
+    if (this.props.component.type !== 'file') {
+      this.props.onChangeComponent(this.props.component.id, e.target.value)
     } else {
-      this.setState({
-        text: e.target.files[0]
-      })
-      this.props.onChangeComponent(this.state.id, e.target.files[0])
+      this.props.onChangeComponent(this.props.component.id, e.target.files[0])
     }
   }
 
+  componentWillReceiveProps (props) {
+    document.getElementById('component' + this.props.component.id).value = props.component.data
+  }
+
   render () {
-    if (this.state.type === 'textarea') {
+    if (this.props.component.type === 'textarea') {
       return (
-        <div data-id={this.state.id}>
-          <textarea data-id={this.state.id} onChange={this.onChange} />
+        <div data-id={this.props.component.id}>
+          <textarea id={'component' + this.props.component.id} data-id={this.props.component.id} onChange={this.onChange} />
         </div>
       )
-    } else if (this.state.type === 'date' || this.state.type === 'file') {
+    } else if (this.props.component.type === 'date' || this.props.component.type === 'file') {
       return (
         <div>
-          <input className='input-text' data-id={this.state.id} type={this.state.type} onChange={this.onChange} accept='image/*' />
+          <input id={'component' + this.props.component.id} className='input-text' data-id={this.props.component.id} type={this.props.component.type} onChange={this.onChange} accept='image/*' />
         </div>
       )
     } else {
       return (
-        <div data-id={this.state.id}>
+        <div data-id={this.props.component.id}>
           <div className='div-left'>
-            <input data-id={this.state.id} type={this.state.type} name={'question' + this.props.questionId} />
+            <input data-id={this.props.component.id} type={this.props.component.type} name={'question' + this.props.idQuestion} />
           </div>
           <div className='div-right'>
-            <input className='input-text' type='text' onChange={this.onChange} />
+            <input id={'component' + this.props.component.id} className='input-text' type='text' onChange={this.onChange} />
           </div>
         </div>
       )

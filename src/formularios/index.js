@@ -1,29 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-const fakeData = [
-  {
-    _id: '0',
-    titulo: 'Exemplo 1',
-    link: 'http://www.fakelink.com.br'
-  },
-  {
-    _id: '1',
-    titulo: 'Exemplo 2',
-    link: 'http://www.fakelin1k.com.br'
-  },
-  {
-    _id: '2',
-    titulo: 'Exemplo 3',
-    link: 'http://www.fakelin2.com.br'
-  },
-  {
-    _id: '3',
-    titulo: 'Exemplo 4',
-    link: 'http://www.fak3link.com.br'
-  }
-]
-
 class Formularios extends Component {
   constructor (props) {
     super(props)
@@ -45,7 +22,7 @@ class Formularios extends Component {
   onRemove (e) {
     var _id = parseInt(e.target.id)
     // Fake remove on DB
-    fakeData.splice(_id, 1)
+    this.props.fakeData.splice(_id, 1)
     this.forceUpdate()
     // EndFake
     this.onEmptySelection()
@@ -108,7 +85,7 @@ class Formularios extends Component {
               </tr>
             </thead>
             <tbody>
-              {fakeData.map((item, key) => {
+              {this.props.fakeData.map((item, key) => {
                 return (
                   <tr key={key}>
                     <td>{item.titulo}</td>
