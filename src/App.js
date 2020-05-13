@@ -4,6 +4,7 @@ import Login from './login'
 import Formularios from './formularios'
 import Formulario from './formulario'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import FormularioReadOnly from './formulario-read-only'
 
 class App extends Component {
   constructor (props) {
@@ -26,7 +27,7 @@ class App extends Component {
             <Formularios />
           </Route>
           <Route path='/formulario/:id'>
-            <div />
+            <FormularioReadOnly />
           </Route>
           <Route path='/formulario/'>
             <Formulario />

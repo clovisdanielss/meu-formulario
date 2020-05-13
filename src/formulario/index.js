@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import CartaoPergunta from '../cartao-pergunta'
-import CustomInput from '../custom-input'
+import CartaoPergunta from './cartao-pergunta'
+import CustomInput from './custom-input'
 
 class Formulario extends Component {
   constructor (props) {
@@ -13,7 +13,7 @@ class Formulario extends Component {
       selected: null
     }
     this.onAddQuestion = this.onAddQuestion.bind(this)
-    this.onAddAnswer = this.onAddAnswer.bind(this)
+    this.onAddComponent = this.onAddComponent.bind(this)
     this.onRemoveQuestion = this.onRemoveQuestion.bind(this)
     this.onSelect = this.onSelect.bind(this)
     this.onChangeQuestion = this.onChangeQuestion.bind(this)
@@ -36,7 +36,7 @@ class Formulario extends Component {
     this.setState({ questionsId: this.state.questionsId + 1 })
   }
 
-  onAddAnswer (e, type) {
+  onAddComponent (e, type) {
     if (this.state.selected) {
       this.state.references[this.state.selected].current.onAdd(<CustomInput
         id={this.state.componentsId}
@@ -63,19 +63,19 @@ class Formulario extends Component {
     if (this.state.selected) {
       const questions = []
       let next = null
+      console.log(this.state.selected)
       this.state.questions.map((question, key) => {
         if (question.id != this.state.selected) {
           questions.push(question)
         } else if (this.state.questions[key + 1]) {
           next = this.state.questions[key + 1].id
-          console.log(next)
         }
       })
+      delete this.state.references[this.state.selected]
       this.setState({
         questions: questions,
         selected: next
       })
-      this.forceUpdate()
     } else {
       alert('Primeiro selecione uma pergunta')
     }
@@ -89,7 +89,6 @@ class Formulario extends Component {
         }
       })
     })
-    this.forceUpdate()
   }
 
   onChangeQuestion (id, title, component = null) {
@@ -98,7 +97,6 @@ class Formulario extends Component {
         question.title = title
       }
     })
-    this.forceUpdate()
   }
 
   componentDidUpdate () {
@@ -122,19 +120,19 @@ class Formulario extends Component {
             <button onClick={this.onRemoveQuestion}>
               Remover cartão pergunta
             </button>
-            <button onClick={(e) => { this.onAddAnswer(e, 'textarea') }}>
+            <button onClick={(e) => { this.onAddComponent(e, 'textarea') }}>
               Adicionar textarea
             </button>
-            <button onClick={(e) => { this.onAddAnswer(e, 'checkbox') }}>
+            <button onClick={(e) => { this.onAddComponent(e, 'checkbox') }}>
               Adicionar checkbox
             </button>
-            <button onClick={(e) => { this.onAddAnswer(e, 'radio') }}>
+            <button onClick={(e) => { this.onAddComponent(e, 'radio') }}>
               Adicionar radiobox
             </button>
-            <button onClick={(e) => { this.onAddAnswer(e, 'date') }}>
+            <button onClick={(e) => { this.onAddComponent(e, 'date') }}>
               Adicionar campo data
             </button>
-            <button onClick={(e) => { this.onAddAnswer(e, 'file') }}>
+            <button onClick={(e) => { this.onAddComponent(e, 'file') }}>
               Adicionar carregar arquivo
             </button>
           </div>
@@ -147,15 +145,17 @@ class Formulario extends Component {
             <hr />
           </div>
           <div>
-            {this.state.questions.map((pergunta, key) => {
+            {this.state.questions.map((question, key) => {
+              console.log(question)
               return (
                 <CartaoPergunta
-                  ref={this.state.references[pergunta.id]}
-                  id={pergunta.id}
+                  ref={this.state.references[question.id]}
+                  id={question.id}
                   index={key}
                   key={key}
                   onSelect={this.onSelect}
                   onChangeQuestion={this.onChangeQuestion}
+                  question={question}
                 />
               )
             })}

@@ -5,16 +5,16 @@ class CartaoPergunta extends Component {
     super(props)
     this.state = {
       id: props.id,
-      question: '',
+      question: props.question.title ? props.question.title : '',
       components: []
     }
     this.onChangeQuestion = this.onChangeQuestion.bind(this)
     this.onAdd = this.onAdd.bind(this)
   }
 
-  onAdd (element) {
-    this.state.components.push(element)
-    this.forceUpdate()
+  onAdd (component) {
+    var components = this.state.components.concat(component)
+    this.setState({ components: components })
   }
 
   onChangeQuestion (e) {
@@ -22,6 +22,17 @@ class CartaoPergunta extends Component {
       question: e.target.value
     })
     this.props.onChangeQuestion(this.state.id, e.target.value)
+  }
+
+  componentWillReceiveProps (props) {
+    this.setState({
+      id: props.id,
+      question: props.question.title ? props.question.title : ''
+    })
+  }
+
+  componentDidUpdate () {
+    console.log('questao', this.state)
   }
 
   render () {
@@ -33,7 +44,7 @@ class CartaoPergunta extends Component {
         <div className='div-right'>
           <div className='question-text-div'>
             <label className='question-label' htmlFor={'question' + this.props.id}>Questão {1 + this.props.index}</label>
-            <input className='input-text' id={'question' + this.props.id} type='text' onChange={this.onChangeQuestion} />
+            <input value={this.state.title} className='input-text' id={'question' + this.props.id} type='text' onChange={this.onChangeQuestion} />
           </div>
           <div>
             {this.state.components.map((item, key) => {
