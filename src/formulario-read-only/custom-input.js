@@ -3,20 +3,24 @@ import React, { Component } from 'react'
 class CustomInput extends Component {
   constructor (props) {
     super(props)
+
     this.onChange = this.onChange.bind(this)
   }
 
   onChange (e) {
     const idQuestion = this.props.idQuestion
+    const type = e.target.getAttribute('type')
     const value = this.props.component.type === 'file'
       ? e.target.files[0] : e.target.value
     var answer = {
       idQuestion: idQuestion,
       value: value,
-      idComponent: e.target.getAttribute('data-id')
+      idComponent: e.target.getAttribute('data-id'),
+      titleQuestion: this.props.titleQuestion,
+      type: type
     }
-    const type = e.target.getAttribute('type')
-    this.props.onChangeAnswer(answer, type !== 'radio')
+
+    this.props.onChangeAnswer(answer)
   }
 
   render () {
@@ -27,13 +31,13 @@ class CustomInput extends Component {
       if (type === 'textarea') {
         return (
           <div>
-            <textarea data-id={id} value={text} onChange={this.onChange} />
+            <textarea data-id={id} onChange={this.onChange} />
           </div>
         )
       } else if (type === 'file' || type === 'date') {
         return (
           <div>
-            <input data-id={id} className='input-text' onChange={this.onChange} accept='image/*' />
+            <input data-id={id} type={type} className='input-text' onChange={this.onChange} accept='image/*' />
           </div>
         )
       } else {

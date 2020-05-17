@@ -17,6 +17,14 @@ code {
   margin: auto;
 }
 
+.auto-generated+div{
+  width: 550px;
+  margin: auto;
+}
+.auto-generated+div>button{
+  width: 100%;
+}
+
 .div-right{
   width: 90%;
   display: inline-block;
@@ -45,6 +53,7 @@ input{
 button{
   height: 42px;
 }
+
 
 .input-text{
   width: calc(100% - 16px);
@@ -86,7 +95,7 @@ th{
 }
 
 #header+hr{
-  margin-bottom: 100px;
+  margin-bottom: 50px;
 }
 #header>h3{
   margin-left: 10px;
@@ -97,19 +106,23 @@ th{
   margin: auto;
   display: grid;
 }
-#login>div>input{
-  width: calc(100% - 16px);
-}
-#login>a{
-  margin-top: 10px;
-}
-#login>a>button{
+
+#login>button{
   width: 100%;
 }
 
 .menu-form,.editor-form{
   text-align: center;
   display: inline-block;
+}
+.menu-form>div>select{
+  width: 90%;
+}
+.menu-form>div{
+  margin-bottom: 15px;
+}
+.menu-div-buttons{
+  margin-top: 15px;
 }
 
 .editor-form>div>input,
@@ -149,6 +162,8 @@ button{
   margin-bottom: 10px;
 }
 
+
+
 @media(max-width:850px){
   .menu-form,.editor-form{
     display: block;
@@ -161,8 +176,11 @@ button{
     padding-bottom: 8px;
   }
   .auto-generated{
-    width: 90%;
+    width: 95%;
     padding: auto;
+  }
+  .auto-generated+div{
+    width: 95%;
   }
 
   #header{

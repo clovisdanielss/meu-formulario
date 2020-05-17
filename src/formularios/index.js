@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import {GlobalStateContext} from '../context'
+import { GlobalStateContext } from '../context'
 class Formularios extends Component {
-
   static contextType = GlobalStateContext
 
   constructor (props) {
@@ -30,12 +29,28 @@ class Formularios extends Component {
   }
 
   onRemove (e) {
-    var _id = parseInt(e.target.id)
-    // Fake remove on DB
-    this.props.fakeData.splice(_id, 1)
-    this.forceUpdate()
-    // EndFake
     this.onEmptySelection()
+    var id = this.state.itemSelected
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState == 4) {
+        if (xhr.status === 204) {
+          alert('Removido com sucesso!')
+          const forms = []
+          this.state.forms.map((form) => {
+            if (form.id != id) {
+              forms.push(form)
+            }
+          })
+          this.setState({ forms: forms })
+        } else {
+          alert('Falha em remover!')
+        }
+      }
+    }
+    xhr.open('delete', process.env.REACT_APP_API + 'users/' + this.context.user.id + '/forms/' + id)
+    xhr.setRequestHeader('Authorization', this.context.user.lastToken)
+    xhr.send()
   }
 
   onEditPath (e) {
@@ -79,19 +94,24 @@ class Formularios extends Component {
                 </button>
               </Link>
             </div>
-            <div className='table-button'>
+            {/*<div className='table-button'>
               <Link onClick={this.onEmptySelection} to={this.onEditPath}>
                 <button>
                 Editar
                 </button>
               </Link>
-            </div>
+            </div>*/}
             <div className='table-button'>
               <Link onClick={this.onRemove} to='/formularios'>
                 <button>
                 Remover
                 </button>
               </Link>
+            </div>
+            <div className='table-button'>
+              <button onClick={this.loadForms}>
+                Atualizar 
+              </button>
             </div>
           </div>
           <div className='table-search'>
@@ -112,8 +132,8 @@ class Formularios extends Component {
                 return (
                   <tr key={key}>
                     <td>{item.title}</td>
-                    <td>{item.link}</td>
-                    <td><input onChange={this.onSelect} type='radio' name='select' id={item._id} /></td>
+                    <td><Link to={'/formulario/' + item.link + '/responder'}>{item.link}</Link></td>
+                    <td><input onChange={this.onSelect} type='radio' name='select' id={item.id} /></td>
                   </tr>
                 )
               })}

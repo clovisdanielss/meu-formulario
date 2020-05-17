@@ -1,89 +1,77 @@
 import React, { Component } from 'react'
 import CartaoPergunta from './cartao-pergunta'
-var fakeData = [
-  {
-    id: 0,
-    title: 'Quanto é 7*8 ?',
-    components: [
-      {
-        id: 0,
-        type: 'radio',
-        text: '10'
-      },
-      {
-        id: 1,
-        type: 'radio',
-        text: '56'
-      },
-      {
-        id: 2,
-        type: 'radio',
-        text: '60'
-      },
-      {
-        id: 3,
-        type: 'radio',
-        text: '64'
-      }
-    ]
-  },
-  {
-    id: 1,
-    title: 'Qual comida você mais gosta ?',
-    components: [
-      {
-        id: 4,
-        type: 'checkbox',
-        text: 'Biscoito'
-      },
-      {
-        id: 5,
-        type: 'checkbox',
-        text: 'Pão'
-      },
-      {
-        id: 6,
-        type: 'checkbox',
-        text: 'Leite'
-      }
-    ]
-  }
-]
 
 class FormularioReadOnly extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      questions: [],
+      form: { questions: [] },
       answers: []
     }
 
     this.loadForm = this.loadForm.bind(this)
     this.onChangeAnswer = this.onChangeAnswer.bind(this)
+    this.onSend = this.onSend.bind(this)
   }
 
-  onChangeAnswer (answer, allowPush) {
+  onSend (e) {
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          alert('Enviado com sucesso!')
+          window.location.reload()
+        } else {
+          alert('Houve algum erro!')
+        }
+      }
+    }
+    xhr.open('post', process.env.REACT_APP_API + 'answers')
+    xhr.setRequestHeader('Content-Type', 'application/json')
+    var form = this.state.form
+    form.answers = this.state.answers
+    xhr.send(JSON.stringify(form))
+  }
+
+  onChangeAnswer (answer) {
     var findCount = 0
+    const type = answer.type
+    const allowMulti = type !== 'radio'
+    var newAnswers = []
     this.state.answers.map((_answer) => {
-      if (!allowPush && _answer.idQuestion === answer.idQuestion) {
+      if (!allowMulti && _answer.idQuestion === answer.idQuestion) {
         _answer.value = answer.value
         _answer.idComponent = answer.idComponent
+        _answer.type = type
+        _answer.titleQuestion = answer.titleQuestion
         findCount += 1
-      } else if (allowPush && _answer.idComponent === answer.idComponent) {
-        _answer.value = answer.value
+      } else if (allowMulti && _answer.idComponent === answer.idComponent) {
+        if (type === 'textarea') {
+          _answer.value += answer.value
+        } else {
+          _answer.value = answer.value
+        }
         findCount += 1
       }
+      newAnswers.push(_answer)
     })
     if (!findCount) {
-      this.state.answers.push(answer)
+      newAnswers = this.state.answers
+      newAnswers.push(answer)
     }
+    this.setState({ answers: newAnswers })
   }
 
   loadForm () {
-    this.setState({
-      questions: fakeData
+    const xhr = new XMLHttpRequest()
+    xhr.addEventListener('load', () => {
+      var form = JSON.parse(xhr.responseText)
+      this.setState({ form: form })
     })
+    const link = document.URL.split('/')[4]
+    xhr.open('get', process.env.REACT_APP_API + 'forms/' + link + '?full=true')
+    xhr.send()
   }
 
   componentDidMount () {
@@ -91,21 +79,26 @@ class FormularioReadOnly extends Component {
   }
 
   componentDidUpdate () {
-    console.log(this.state.answers)
+    console.log(this.state)
   }
 
   render () {
     return (
       <div className='container'>
-        {this.state.questions.map((question, key) => {
-          return (
-            <CartaoPergunta
-              key={key}
-              question={question}
-              onChangeAnswer={this.onChangeAnswer}
-            />
-          )
-        })}
+        <div className='auto-generated'>
+          {this.state.form.questions.map((question, key) => {
+            return (
+              <CartaoPergunta
+                key={key}
+                question={question}
+                onChangeAnswer={this.onChangeAnswer}
+              />
+            )
+          })}
+        </div>
+        <div>
+          <button onClick={this.onSend}>Enviar</button>
+        </div>
       </div>
     )
   }
