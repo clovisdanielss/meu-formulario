@@ -69,7 +69,7 @@ textarea{
   height: 150px;
 }
 .container{
-  width: 900px;
+  width: 98%;
   margin: auto;
 }
 
@@ -83,4 +83,97 @@ table{
 th{
   border-bottom-style: solid;
   border-bottom-width: 1px;
+}
+
+#header+hr{
+  margin-bottom: 100px;
+}
+#header>h3{
+  margin-left: 10px;
+}
+
+#login{
+  width: 400px;
+  margin: auto;
+  display: grid;
+}
+#login>div>input{
+  width: calc(100% - 16px);
+}
+#login>a{
+  margin-top: 10px;
+}
+#login>a>button{
+  width: 100%;
+}
+
+.menu-form,.editor-form{
+  text-align: center;
+  display: inline-block;
+}
+
+.editor-form>div>input,
+.editor-form>div>h3{
+  display: inline-block;
+}
+.editor-form>div+hr{
+  margin-top: 0px;
+}
+
+button{
+  width: 100px;
+}
+
+.menu-form button{
+  height: 90px;
+}
+
+.editor-form{
+  width:calc(100% - 300px);
+  vertical-align: top;
+}
+
+.menu-div-buttons{
+  display: flex;
+}
+.menu-form{
+  width: 300px;
+}
+
+.menu-table{
+  justify-content: space-between;
+  display: inline;
+}
+
+.container>div{
+  margin-bottom: 10px;
+}
+
+@media(max-width:850px){
+  .menu-form,.editor-form{
+    display: block;
+    width: 100%;
+  }
+  .menu-form{
+    border-bottom-style: solid;
+    border-color:#666666;
+    border-bottom-width: 2px;
+    padding-bottom: 8px;
+  }
+  .auto-generated{
+    width: 90%;
+    padding: auto;
+  }
+
+  #header{
+    text-align: center;
+  }
+  .menu-table{
+    justify-content: space-between;
+    display: flex;
+  }
+  .table-search{
+    float: none;
+    display: grid;
+  }
 }

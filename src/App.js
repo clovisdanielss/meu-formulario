@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import './App.css'
-import Login from './login'
+import Login from './login/index.js'
 import Formularios from './formularios'
+import Logged from './login/logged.js'
 import Formulario from './formulario'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import FormularioReadOnly from './formulario-read-only'
+import { GlobalStateContext } from './context'
 
 const fakeData = [
   {
@@ -28,6 +30,25 @@ const fakeData = [
     link: 'http://www.fak3link.com.br'
   }
 ]
+
+const Protected = ({ children, ...rest }) => {
+  const context = React.useContext(GlobalStateContext)
+  const isAuth = () => {
+    return context.user
+  }
+  return (
+    <Route
+      {...rest} render={({ location }) =>
+        isAuth() ? (children)
+          : (<Redirect
+            to={{
+              pathname: '/',
+              state: { from: location }
+            }}
+             />)}
+    />
+  )
+}
 
 class App extends Component {
   constructor (props) {
@@ -59,15 +80,22 @@ class App extends Component {
   render () {
     return (
       <Router className='App'>
+        <div id='header'>
+          <h3>MeuFormulário</h3>
+        </div>
+        <hr />
         <Switch>
-          <Route path='/formularios/'>
+          <Protected path='/formularios/'>
             <Formularios fakeData={fakeData} />
-          </Route>
-          <Route path='/formulario/:id'>
+          </Protected>
+          <Route path='/formulario/:id/responder'>
             <FormularioReadOnly />
           </Route>
-          <Route path='/formulario/'>
+          <Protected path='/formulario/'>
             <Formulario onFakeSave={this.onFakeSave} />
+          </Protected>
+          <Route path='/logged'>
+            <Logged />
           </Route>
           <Route path=''>
             <Login onLogin={this.onLogin} />

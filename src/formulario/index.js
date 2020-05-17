@@ -114,50 +114,56 @@ class Formulario extends Component {
   render () {
     return (
       <div>
-        <div>
+        <div className='menu-form'>
           <div>
             <h3>
               Menu
             </h3>
-            <hr />
           </div>
-          <div>
-            <button onClick={this.onAddQuestion}>
+          <hr />
+          <div className='menu-div-buttons'>
+            <div>
+              <button onClick={this.onAddQuestion}>
               Adicionar cartão pergunta
-            </button>
-            <button onClick={this.onRemoveQuestion}>
-              Remover cartão pergunta
-            </button>
-            <button onClick={(e) => { this.onAddComponent(e, 'textarea') }}>
-              Adicionar textarea
-            </button>
-            <button onClick={(e) => { this.onAddComponent(e, 'checkbox') }}>
-              Adicionar checkbox
-            </button>
-            <button onClick={(e) => { this.onAddComponent(e, 'radio') }}>
-              Adicionar radiobox
-            </button>
-            <button onClick={(e) => { this.onAddComponent(e, 'date') }}>
-              Adicionar campo data
-            </button>
-            <button onClick={(e) => { this.onAddComponent(e, 'file') }}>
-              Adicionar carregar arquivo
-            </button>
-            <Link to='/formularios' onClick={this.onSave}>
-              <button>
-              Salvar
               </button>
-            </Link>
+              <button onClick={this.onRemoveQuestion}>
+              Remover cartão pergunta
+              </button>
+              <button onClick={(e) => { this.onAddComponent(e, 'textarea') }}>
+              Adicionar textarea
+              </button>
+            </div>
+            <div>
+              <button onClick={(e) => { this.onAddComponent(e, 'checkbox') }}>
+              Adicionar checkbox
+              </button>
+              <button onClick={(e) => { this.onAddComponent(e, 'radio') }}>
+              Adicionar radiobox
+              </button>
+              <button onClick={(e) => { this.onAddComponent(e, 'date') }}>
+              Adicionar campo data
+              </button>
+            </div>
+            <div>
+              <button onClick={(e) => { this.onAddComponent(e, 'file') }}>
+              Adicionar carregar arquivo
+              </button>
+              <Link to='/formularios' onClick={this.onSave}>
+                <button>
+              Salvar
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
-        <div>
+        <div className='editor-form'>
           <div>
             <h3>
               Título
             </h3>
             <input onChange={this.onChangeTitle} />
-            <hr />
           </div>
+          <hr />
           <div>
             {this.state.questions.map((question, key) => {
               console.log(question)
