@@ -11,6 +11,7 @@ class CartaoPergunta extends Component {
       <div>
         <div className='question-text-div'>
           <h3>{this.props.question.title}</h3>
+          <h3 style={{ color: 'red' }}>{this.props.question.required ? '*' : ''}</h3>
         </div>
         <div>
           {this.props.question.components.map((item, key) => {

@@ -42,6 +42,9 @@ code {
   display: block;
 }
 
+.question-text-div>h3{
+  display: inline;
+}
 .question-text-div,.question-component-div{
   margin-bottom: 10px;
 }

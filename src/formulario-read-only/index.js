@@ -12,7 +12,31 @@ class FormularioReadOnly extends Component {
 
     this.loadForm = this.loadForm.bind(this)
     this.onChangeAnswer = this.onChangeAnswer.bind(this)
+    this.isMissingRequired = this.isMissingRequired.bind(this)
     this.onSend = this.onSend.bind(this)
+  }
+
+  isMissingRequired () {
+    var totalReqs = 0
+    this.state.form.questions.map((question) => {
+      if (question.required) {
+        totalReqs++
+        this.state.answers.map((answer) => {
+          if (answer.titleQuestion === question.title) {
+            if (answer.type === 'file' &&
+                answer.value.name.length > 3) {
+              totalReqs--
+            } else if (answer.type === 'date' &&
+              answer.value.toString().length > 3) {
+              totalReqs--
+            } else if (answer.value.length > 3) {
+              totalReqs--
+            }
+          }
+        })
+      }
+    })
+    return totalReqs !== 0
   }
 
   onSend (e) {
@@ -31,7 +55,11 @@ class FormularioReadOnly extends Component {
     xhr.setRequestHeader('Content-Type', 'application/json')
     var form = this.state.form
     form.answers = this.state.answers
-    xhr.send(JSON.stringify(form))
+    if (this.isMissingRequired()) {
+      alert('Falta preencher um campo obrigatório.')
+    } else {
+      xhr.send(JSON.stringify(form))
+    }
   }
 
   onChangeAnswer (answer) {
