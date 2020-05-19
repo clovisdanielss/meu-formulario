@@ -25,7 +25,7 @@ class CustomInput extends Component {
   }
 
   componentWillReceiveProps (props) {
-    document.getElementById('component' + this.props.component.id).value = props.component.data
+    document.getElementById('component' + this.props.component.id).value = props.component.text
   }
 
   render () {
@@ -59,7 +59,7 @@ class CustomInput extends Component {
             <input data-id={this.props.component.id} type={this.props.component.type} name={'question' + this.props.idQuestion} />
           </div>
           <div className='div-right'>
-            <input id={'component' + this.props.component.id} className='input-text' type='text' onChange={this.onChange} />
+            <input value={this.props.component.text} id={'component' + this.props.component.id} className='input-text' type='text' onChange={this.onChange} />
           </div>
         </div>
       )

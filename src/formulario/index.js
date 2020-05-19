@@ -137,7 +137,7 @@ class Formulario extends Component {
           question.components.push({
             id: this.state.componentsId,
             type: type,
-            data: ''
+            text: ''
           })
         }
       })
@@ -168,13 +168,16 @@ class Formulario extends Component {
   }
 
   onChangeComponent (id, text) {
+    var questions = []
     this.state.questions.map((question) => {
       question.components.map((component) => {
         if (component.id == id) {
           component.text = text
         }
       })
+      questions.push(question)
     })
+    this.setState({questions:questions})
   }
 
   onChangeRequired(e){
@@ -210,6 +213,7 @@ class Formulario extends Component {
   }
 
   componentDidUpdate(){
+    console.log(this.state)
     if(this.state.selectedList &&
       this.state.selectedList.idBoard !=
       this.state.selectedBoard.id){
@@ -284,7 +288,7 @@ class Formulario extends Component {
                 </button>
               </Link>
               <button onClick={this.onChangeRequired}>
-                Definir/Desdefinir questão obrigatória
+                (Des)definir questão obrigatória
               </button>
             </div>
           </div>
