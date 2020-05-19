@@ -29,6 +29,7 @@ class Formulario extends Component {
     this.onChangeQuestion = this.onChangeQuestion.bind(this)
     this.onChangeComponent = this.onChangeComponent.bind(this)
     this.onChangeTitle = this.onChangeTitle.bind(this)
+    this.onChangeRequired = this.onChangeRequired.bind(this)
 
     this.onSave = this.onSave.bind(this)
     this.loadBoards = this.loadBoards.bind(this)
@@ -92,7 +93,6 @@ class Formulario extends Component {
       idList: this.state.selectedList.id,
       questions: this.state.questions
     }
-    console.log(form)
     const xhr = new XMLHttpRequest()
     xhr.onreadystatechange = () =>{
       if(xhr.readyState === 4){
@@ -151,7 +151,6 @@ class Formulario extends Component {
     if (this.state.selected) {
       const questions = []
       let next = null
-      console.log(this.state.selected)
       this.state.questions.map((question, key) => {
         if (question.id != this.state.selected) {
           questions.push(question)
@@ -178,6 +177,26 @@ class Formulario extends Component {
     })
   }
 
+  onChangeRequired(e){
+    if(this.state.selected){
+      var questions = []
+      this.state.questions.map((question)=>{
+        if(question.id == this.state.selected){
+          if(!question.required){
+            question.required = true
+          }else{
+            question.required = false
+          }
+        }
+        questions.push(question)
+      })
+      this.setState({questions:questions})
+    }
+    else{
+      alert('Primeiro selecione uma pergunta')
+    }
+  }
+
   onChangeQuestion (id, title, component = null) {
     this.state.questions.map((question) => {
       if (question.id == id) {
@@ -194,7 +213,6 @@ class Formulario extends Component {
     if(this.state.selectedList &&
       this.state.selectedList.idBoard !=
       this.state.selectedBoard.id){
-      console.log('Atualizando', this.state.selectedList, this.state.selectedBoard.id)
       this.loadLists()
     }
   }
@@ -265,6 +283,9 @@ class Formulario extends Component {
               Salvar
                 </button>
               </Link>
+              <button onClick={this.onChangeRequired}>
+                Definir questão obrigatória
+              </button>
             </div>
           </div>
         </div>
@@ -278,10 +299,9 @@ class Formulario extends Component {
           <hr />
           <div>
             {this.state.questions.map((question, key) => {
-              console.log(question)
               return (
                 <CartaoPergunta
-                  id={question.id}
+                  question={question}
                   index={key}
                   key={key}
                   onSelect={this.onSelect}

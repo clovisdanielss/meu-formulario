@@ -48,7 +48,7 @@ class FormularioReadOnly extends Component {
         findCount += 1
       } else if (allowMulti && _answer.idComponent === answer.idComponent) {
         if (type === 'textarea') {
-          _answer.value += answer.value
+          _answer.value = answer.value
         } else {
           _answer.value = answer.value
         }

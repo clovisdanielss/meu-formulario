@@ -16,19 +16,24 @@ class CartaoPergunta extends Component {
   }
 
   componentWillReceiveProps (props) {
-    document.getElementById('question' + this.props.id).value = props.question.title
+    document.getElementById('question' + this.props.question.id).value = props.question.title
   }
 
   render () {
     return (
-      <div id={this.props.id} className='auto-generated'>
+      <div id={this.props.question.id} className='auto-generated'>
         <div className='div-left'>
-          <input onClick={this.props.onSelect} data-id={this.props.id} type='radio' name='selected' />
+          <input onClick={this.props.onSelect} data-id={this.props.question.id} type='radio' name='selected' />
         </div>
         <div className='div-right'>
           <div className='question-text-div'>
-            <label className='question-label' htmlFor={'question' + this.props.id}>Questão {1 + this.props.index}</label>
-            <input className='input-text' id={'question' + this.props.id} type='text' onChange={this.onChangeQuestion} />
+            <label
+              className='question-label'
+              htmlFor={'question' + this.props.question.id}
+            >
+                   Questão {1 + this.props.index}{this.props.question.required ? '*' : null}
+            </label>
+            <input className='input-text' id={'question' + this.props.question.id} type='text' onChange={this.onChangeQuestion} />
           </div>
           <div>
             {this.props.question.components.map((component, key) => {
