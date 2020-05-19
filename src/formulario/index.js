@@ -210,7 +210,6 @@ class Formulario extends Component {
   }
 
   componentDidUpdate(){
-    console.log(this.state)
     if(this.state.selectedList &&
       this.state.selectedList.idBoard !=
       this.state.selectedBoard.id){
