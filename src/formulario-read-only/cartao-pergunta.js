@@ -22,6 +22,7 @@ class CartaoPergunta extends Component {
                 onChangeAnswer={this.props.onChangeAnswer}
                 idQuestion={this.props.question.id}
                 titleQuestion={this.props.question.title}
+                onRemoveFiles={this.props.onRemoveFiles}
               />
             )
           })}

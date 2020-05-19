@@ -13,6 +13,7 @@ class FormularioReadOnly extends Component {
     this.loadForm = this.loadForm.bind(this)
     this.onChangeAnswer = this.onChangeAnswer.bind(this)
     this.isMissingRequired = this.isMissingRequired.bind(this)
+    this.onRemoveFiles = this.onRemoveFiles.bind(this)
     this.onSend = this.onSend.bind(this)
   }
 
@@ -62,28 +63,37 @@ class FormularioReadOnly extends Component {
     }
   }
 
+  onRemoveFiles (idComponent) {
+    var newAnswers = []
+    this.state.answers.map((answer) => {
+      if (answer.type !== 'file') {
+        newAnswers.push(answer)
+      }
+    })
+    this.setState({ answers: newAnswers })
+  }
+
   onChangeAnswer (answer) {
     var findCount = 0
     const type = answer.type
-    const allowMulti = type !== 'radio'
+    const isRadio = type === 'radio'
+    const isFile = type === 'file'
     var newAnswers = []
     this.state.answers.map((_answer) => {
-      if (!allowMulti && _answer.idQuestion === answer.idQuestion) {
+      // Permitir unica resposta para uma pergunta.
+      if (isRadio && _answer.idQuestion === answer.idQuestion) {
         _answer.value = answer.value
         _answer.idComponent = answer.idComponent
-        _answer.type = type
-        _answer.titleQuestion = answer.titleQuestion
         findCount += 1
-      } else if (allowMulti && _answer.idComponent === answer.idComponent) {
-        if (type === 'textarea') {
-          _answer.value = answer.value
-        } else {
-          _answer.value = answer.value
-        }
+      }
+      // Permitir multiplas respostas de idComponente distintos.
+      else if (!isRadio && !isFile && _answer.idComponent === answer.idComponent) {
+        _answer.value = answer.value
         findCount += 1
       }
       newAnswers.push(_answer)
     })
+    // Se nenhuma resposta existente foi encontrado, adicione.
     if (!findCount) {
       newAnswers = this.state.answers
       newAnswers.push(answer)
@@ -106,6 +116,10 @@ class FormularioReadOnly extends Component {
     this.loadForm()
   }
 
+  componentDidUpdate () {
+    console.log(this.state.answers)
+  }
+
   render () {
     return [
       <Header title={this.state.form.title} key='0' />,
@@ -117,6 +131,7 @@ class FormularioReadOnly extends Component {
                 key={key}
                 question={question}
                 onChangeAnswer={this.onChangeAnswer}
+                onRemoveFiles={this.onRemoveFiles}
               />
             )
           })}

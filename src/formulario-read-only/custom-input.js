@@ -30,21 +30,24 @@ class CustomInput extends Component {
   }
 
   onChangeFile (e) {
-    const file = e.target.files[0]
-    var reader = new FileReader()
     const props = this.props
-    reader.readAsArrayBuffer(file)
-    reader.onload = (e) => {
-      const buffer = Buffer.from(e.target.result).toJSON().data
-      var answer = {
-        idQuestion: props.idQuestion,
-        value: { data: buffer, name: file.name },
-        idComponent: props.component.id,
-        titleQuestion: props.titleQuestion,
-        type: props.component.type
+    this.props.onRemoveFiles(props.idComponent)
+    console.log(e.target.files)
+    Array.from(e.target.files).map((file) => {
+      var reader = new FileReader()
+      reader.readAsArrayBuffer(file)
+      reader.onload = (e) => {
+        const buffer = Buffer.from(e.target.result).toJSON().data
+        var answer = {
+          idQuestion: props.idQuestion,
+          value: { data: buffer, name: file.name },
+          idComponent: props.component.id,
+          titleQuestion: props.titleQuestion,
+          type: props.component.type
+        }
+        props.onChangeAnswer(answer)
       }
-      props.onChangeAnswer(answer)
-    }
+    })
   }
 
   render () {
@@ -61,7 +64,7 @@ class CustomInput extends Component {
       } else if (type === 'file') {
         return (
           <div>
-            <input data-id={id} type={type} className='input-text' onChange={this.onChangeFile} />
+            <input multiple data-id={id} type={type} className='input-text' onChange={this.onChangeFile} />
           </div>
         )
       } else if (this.props.component.type === 'date') {
