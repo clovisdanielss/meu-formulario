@@ -7,7 +7,8 @@ class FormularioReadOnly extends Component {
 
     this.state = {
       form: { questions: [] },
-      answers: []
+      answers: [],
+      wait: false
     }
 
     this.loadForm = this.loadForm.bind(this)
@@ -44,14 +45,19 @@ class FormularioReadOnly extends Component {
     var xhr = new XMLHttpRequest()
     xhr.open('post', process.env.REACT_APP_API + 'answers')
     xhr.setRequestHeader('Content-Type', 'application/json')
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4 && xhr.status < 300) {
+        alert('Enviado com sucesso!')
+        window.location.reload()
+      }
+    }
     var form = this.state.form
     form.answers = this.state.answers
     if (this.isMissingRequired()) {
       alert('Falta preencher um campo obrigatório.')
     } else {
       xhr.send(JSON.stringify(form))
-      alert('Enviado com sucesso!')
-      window.location.reload()
+      this.setState({ wait: true })
     }
   }
 
@@ -113,26 +119,35 @@ class FormularioReadOnly extends Component {
   }
 
   render () {
-    return [
-      <Header title={this.state.form.title} key='0' />,
-      <div className='container' key='1'>
-        <div className='auto-generated'>
-          {this.state.form.questions.map((question, key) => {
-            return (
-              <CartaoPergunta
-                key={key}
-                question={question}
-                onChangeAnswer={this.onChangeAnswer}
-                onRemoveFiles={this.onRemoveFiles}
-              />
-            )
-          })}
+    if (this.state.wait) {
+      return [
+        <Header title={this.state.form.title} key='0' />,
+        <div key='1' className='container'>
+          <h1>Aguarde enquanto carregamos!</h1>
         </div>
-        <div>
-          <button onClick={this.onSend}>Enviar</button>
+      ]
+    } else {
+      return [
+        <Header title={this.state.form.title} key='0' />,
+        <div className='container' key='1'>
+          <div className='auto-generated'>
+            {this.state.form.questions.map((question, key) => {
+              return (
+                <CartaoPergunta
+                  key={key}
+                  question={question}
+                  onChangeAnswer={this.onChangeAnswer}
+                  onRemoveFiles={this.onRemoveFiles}
+                />
+              )
+            })}
+          </div>
+          <div>
+            <button onClick={this.onSend}>Enviar</button>
+          </div>
         </div>
-      </div>
-    ]
+      ]
+    }
   }
 }
 
