@@ -29,7 +29,7 @@ class CartaoPergunta extends Component {
             >
                    Questão {1 + this.props.index}{this.props.question.required ? '*' : null}
             </label>
-            <input className='input-text' id={'question' + this.props.question.id} type='text' onChange={this.onChangeQuestion} />
+            <input readOnly={this.props.question.id === 0} className='input-text' id={'question' + this.props.question.id} type='text' onChange={this.onChangeQuestion} />
           </div>
           <div>
             {this.props.question.components.map((component, key) => {

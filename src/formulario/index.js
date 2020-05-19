@@ -10,9 +10,20 @@ class Formulario extends Component {
     super(props)
     this.state = {
       title: '',
-      questions: [],
-      questionsId: 0,
-      componentsId: 0,
+      questions: [{
+        id:0,
+        title:'Nome da Postagem',
+        required:true,
+        components:[
+          {
+            id:0,
+            type:'textarea',
+            text:''
+          } 
+        ]
+      }],
+      questionsId: 1,
+      componentsId: 1,
       selected: null,
       selectedBoard: null,
       selectedList: null,
@@ -148,7 +159,7 @@ class Formulario extends Component {
   }
 
   onRemoveQuestion (e) {
-    if (this.state.selected) {
+    if (this.state.selected && this.state.selected != 0) {
       const questions = []
       let next = null
       this.state.questions.map((question, key) => {
@@ -163,7 +174,11 @@ class Formulario extends Component {
         selected: next
       })
     } else {
-      alert('Primeiro selecione uma pergunta')
+      if(this.state.selected === 0){
+        alert('Esse campo não pode ser removido.')
+      }else{
+        alert('Primeiro selecione uma pergunta')  
+      }
     }
   }
 
@@ -181,7 +196,7 @@ class Formulario extends Component {
   }
 
   onChangeRequired(e){
-    if(this.state.selected){
+    if(this.state.selected && this.state.selected != 0){
       var questions = []
       this.state.questions.map((question)=>{
         if(question.id == this.state.selected){
@@ -196,7 +211,11 @@ class Formulario extends Component {
       this.setState({questions:questions})
     }
     else{
-      alert('Primeiro selecione uma pergunta')
+      if(this.state.selected === 0){
+        alert('Esse campo não pode ser removido.')
+      }else{
+        alert('Primeiro selecione uma pergunta')  
+      }
     }
   }
 
