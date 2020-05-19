@@ -75,14 +75,26 @@ textarea{
   float: right;
 }
 
+
+.container{
+  width: 98%;
+  margin: auto;
+}
+
+.editor-form{
+  position: relative;
+    overflow-y: auto;
+  height: 720px;
+}
+.form{
+  position: absolute;
+  width: 100%;
+}
+
 .table-div{
   position: relative;
   overflow-y: auto;
   height: 150px;
-}
-.container{
-  width: 98%;
-  margin: auto;
 }
 
 table{

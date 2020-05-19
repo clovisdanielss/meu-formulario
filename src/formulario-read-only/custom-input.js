@@ -16,7 +16,9 @@ class CustomInput extends Component {
     const type = this.props.component.type
     const value = type === 'date'
       ? e : e.target.value
+    const checked = e.target ? e.target.checked : e
     var answer = {
+      checked: checked,
       idQuestion: idQuestion,
       value: value,
       idComponent: this.props.component.id,

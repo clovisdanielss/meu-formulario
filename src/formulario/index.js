@@ -301,7 +301,7 @@ class Formulario extends Component {
             <input onChange={this.onChangeTitle} />
           </div>
           <hr />
-          <div>
+          <div className='form'>
             {this.state.questions.map((question, key) => {
               return (
                 <CartaoPergunta

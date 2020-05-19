@@ -23,22 +23,29 @@ class FormularioReadOnly extends Component {
     this.state.form.questions.map((question) => {
       if (question.required) {
         totalReqs++
-        this.state.answers.map((answer) => {
+        const answers = this.state.answers
+        for (let i = 0; i < answers.length; i++) {
+          const answer = answers[i]
           if (answer.titleQuestion === question.title) {
+            console.log(answer)
             if (answer.type === 'file' &&
                 answer.value.name.length > 3) {
               totalReqs--
+              break
             } else if (answer.type === 'date' &&
               answer.value.toString().length > 3) {
               totalReqs--
+              break
             } else if (answer.value.length > 3) {
               totalReqs--
+              break
             }
           }
-        })
+        }
       }
     })
-    return totalReqs !== 0
+    console.log(totalReqs)
+    return totalReqs > 0
   }
 
   onSend (e) {
@@ -76,8 +83,11 @@ class FormularioReadOnly extends Component {
     const type = answer.type
     const isRadio = type === 'radio'
     const isFile = type === 'file'
+    const isCheckbox = type === 'checkbox'
     var newAnswers = []
-    this.state.answers.map((_answer) => {
+    const _answers = this.state.answers
+    for (let i = 0; i < _answers.length; i++) {
+      const _answer = _answers[i]
       // Permitir unica resposta para uma pergunta.
       if (isRadio && _answer.idQuestion === answer.idQuestion) {
         _answer.value = answer.value
@@ -88,9 +98,12 @@ class FormularioReadOnly extends Component {
       else if (!isRadio && !isFile && _answer.idComponent === answer.idComponent) {
         _answer.value = answer.value
         findCount += 1
+        if (isCheckbox && !answer.checked) {
+          continue
+        }
       }
       newAnswers.push(_answer)
-    })
+    }
     // Se nenhuma resposta existente foi encontrado, adicione.
     if (!findCount) {
       newAnswers = this.state.answers
