@@ -171,7 +171,7 @@ class Formulario extends Component {
     this.state.questions.map((question) => {
       question.components.map((component) => {
         if (component.id == id) {
-          component.data = text
+          component.text = text
         }
       })
     })
@@ -210,6 +210,7 @@ class Formulario extends Component {
   }
 
   componentDidUpdate(){
+    console.log(this.state)
     if(this.state.selectedList &&
       this.state.selectedList.idBoard !=
       this.state.selectedBoard.id){
@@ -284,7 +285,7 @@ class Formulario extends Component {
                 </button>
               </Link>
               <button onClick={this.onChangeRequired}>
-                Definir questão obrigatória
+                Definir/Desdefinir questão obrigatória
               </button>
             </div>
           </div>

@@ -11,10 +11,6 @@ class CartaoPergunta extends Component {
     this.props.onChangeQuestion(this.props.question.id, e.target.value)
   }
 
-  componentDidUpdate () {
-    console.log('questao', this.props.question)
-  }
-
   componentWillReceiveProps (props) {
     document.getElementById('question' + this.props.question.id).value = props.question.title
   }
