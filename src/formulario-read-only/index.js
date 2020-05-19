@@ -42,16 +42,6 @@ class FormularioReadOnly extends Component {
 
   onSend (e) {
     var xhr = new XMLHttpRequest()
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          alert('Enviado com sucesso!')
-          window.location.reload()
-        } else {
-          alert('Houve algum erro!')
-        }
-      }
-    }
     xhr.open('post', process.env.REACT_APP_API + 'answers')
     xhr.setRequestHeader('Content-Type', 'application/json')
     var form = this.state.form
@@ -60,6 +50,8 @@ class FormularioReadOnly extends Component {
       alert('Falta preencher um campo obrigatório.')
     } else {
       xhr.send(JSON.stringify(form))
+      alert('Enviado com sucesso!')
+      window.location.reload()
     }
   }
 
