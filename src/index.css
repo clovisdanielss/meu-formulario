@@ -94,7 +94,7 @@ th{
   border-bottom-width: 1px;
 }
 
-#header+hr{
+#header>hr{
   margin-bottom: 50px;
 }
 #header>h3{
@@ -162,13 +162,16 @@ button{
   margin-bottom: 10px;
 }
 
-
+.datetime>div{
+  width: 100%;
+}
 
 @media(max-width:850px){
   .menu-form,.editor-form{
     display: block;
     width: 100%;
   }
+
   .menu-form{
     border-bottom-style: solid;
     border-color:#666666;
@@ -182,7 +185,9 @@ button{
   .auto-generated+div{
     width: 95%;
   }
-
+  #login{
+    width: 100%;
+  }
   #header{
     text-align: center;
   }

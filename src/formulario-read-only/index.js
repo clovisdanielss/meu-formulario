@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import CartaoPergunta from './cartao-pergunta'
-
+import Header from '../header'
 class FormularioReadOnly extends Component {
   constructor (props) {
     super(props)
@@ -78,13 +78,10 @@ class FormularioReadOnly extends Component {
     this.loadForm()
   }
 
-  componentDidUpdate () {
-    console.log(this.state)
-  }
-
   render () {
-    return (
-      <div className='container'>
+    return [
+      <Header title={this.state.form.title} key='0' />,
+      <div className='container' key='1'>
         <div className='auto-generated'>
           {this.state.form.questions.map((question, key) => {
             return (
@@ -100,7 +97,7 @@ class FormularioReadOnly extends Component {
           <button onClick={this.onSend}>Enviar</button>
         </div>
       </div>
-    )
+    ]
   }
 }
 

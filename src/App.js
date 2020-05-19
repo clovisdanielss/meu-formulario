@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import './App.css'
 import Login from './login/index.js'
 import Formularios from './formularios'
 import Logged from './login/logged.js'
 import Formulario from './formulario'
+import Header from './header'
 import { BrowserRouter as Router, Switch, Route, Redirect, Link } from 'react-router-dom'
 import FormularioReadOnly from './formulario-read-only'
 import { GlobalStateContext } from './context'
@@ -43,26 +43,24 @@ class App extends Component {
   render () {
     return (
       <Router className='App'>
-        <div id='header'>
-          <Link to='/formularios'>
-            <h3>MeuFormulário</h3>
-          </Link>
-        </div>
-        <hr />
         <Switch>
           <Protected path='/formularios/'>
+            <Header />
             <Formularios />
           </Protected>
           <Route path='/formulario/:link/responder'>
             <FormularioReadOnly />
           </Route>
           <Protected path='/formulario/'>
+            <Header />
             <Formulario />
           </Protected>
           <Route path='/logged'>
+            <Header />
             <Logged />
           </Route>
           <Route path=''>
+            <Header />
             <Login onLogin={this.onLogin} />
           </Route>
         </Switch>

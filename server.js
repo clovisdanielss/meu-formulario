@@ -4,7 +4,11 @@ var http = require('http')
 var path = require('path')
 var cors = require('cors')
 
-app.use(cors())
+app.use(cors({
+  origin: ['https://trello.com',
+    'https://api-meu-formulario.herokuapp.com',
+    'http://localhost:8080']
+}))
 
 app.use(express.static(path.join(__dirname, 'build')))
 
