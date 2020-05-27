@@ -27,7 +27,6 @@ class FormularioReadOnly extends Component {
         for (let i = 0; i < answers.length; i++) {
           const answer = answers[i]
           if (answer.titleQuestion === question.title) {
-            console.log(answer)
             if (answer.type === 'file' &&
                 answer.value.name.length > 3) {
               totalReqs--

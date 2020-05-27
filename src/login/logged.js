@@ -24,7 +24,6 @@ class Logged extends Component{
       const user = JSON.parse(xhr.responseText)
       this.context({user:user})
       this.setState({isUserLogged:true})
-      console.log('sucesso!')
     })
     xhr.open('get', process.env.REACT_APP_API + 'logged')
     xhr.setRequestHeader('Authorization', this.state.token)

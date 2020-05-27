@@ -34,7 +34,6 @@ class CustomInput extends Component {
   onChangeFile (e) {
     const props = this.props
     this.props.onRemoveFiles(props.idComponent)
-    console.log(e.target.files)
     Array.from(e.target.files).map((file) => {
       var reader = new FileReader()
       reader.readAsArrayBuffer(file)

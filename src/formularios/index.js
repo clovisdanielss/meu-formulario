@@ -18,9 +18,6 @@ class Formularios extends Component {
     this.loadForms = this.loadForms.bind(this)
   }
 
-  componentDidMount () {
-    this.loadForms()
-  }
 
   onSelect (e) {
     this.setState({
