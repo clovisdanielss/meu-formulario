@@ -54,7 +54,7 @@ input{
 }
 
 button{
-  height: 42px;
+  height: 52px;
 }
 
 
@@ -70,6 +70,7 @@ textarea{
 .table-button{
   display: inline-block;
   margin-right: 10px;
+  vertical-align: bottom;
 }
 .table-search{
   float: right;

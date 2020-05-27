@@ -52,8 +52,12 @@ class FormularioReadOnly extends Component {
     xhr.open('post', process.env.REACT_APP_API + 'answers')
     xhr.setRequestHeader('Content-Type', 'application/json')
     xhr.onreadystatechange = () => {
-      if (xhr.readyState === 4 && xhr.status < 300) {
-        alert('Enviado com sucesso!')
+      if (xhr.readyState === 4) {
+        if (xhr.status < 300) {
+          alert('Enviado com sucesso!')
+        } else {
+          alert('Houve algum erro, tente novamente!')
+        }
         window.location.reload()
       }
     }

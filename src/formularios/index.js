@@ -52,7 +52,8 @@ class Formularios extends Component {
 
   onEditPath (e) {
     if (this.state.itemSelected) {
-      return '/formulario/' + this.state.itemSelected
+      let link = document.getElementById(this.state.itemSelected).getAttribute('data-link')
+      return '/formulario/' + link
     } else {
       return '/formularios'
     }
@@ -75,8 +76,8 @@ class Formularios extends Component {
     xhr.send()
   }
 
-  componentDidUpdate () {
-    console.log(this.state)
+  componentDidMount(){
+    this.loadForms()
   }
 
   render () {
@@ -91,13 +92,13 @@ class Formularios extends Component {
                 </button>
               </Link>
             </div>
-            {/*<div className='table-button'>
+            <div className='table-button'>
               <Link onClick={this.onEmptySelection} to={this.onEditPath}>
                 <button>
-                Editar
+                  Como Template
                 </button>
               </Link>
-            </div>*/}
+            </div>
             <div className='table-button'>
               <Link onClick={this.onRemove} to='/formularios'>
                 <button>
@@ -130,7 +131,7 @@ class Formularios extends Component {
                   <tr key={key}>
                     <td>{item.title}</td>
                     <td><Link to={'/formulario/' + item.link + '/responder'}>{item.link}</Link></td>
-                    <td><input onChange={this.onSelect} type='radio' name='select' id={item.id} /></td>
+                    <td><input onChange={this.onSelect} type='radio' name='select' id={item.id} data-link={item.link} /></td>
                   </tr>
                 )
               })}

@@ -5,10 +5,15 @@ import { GlobalStateContext } from '../context'
 
 class Formulario extends Component {
   static contextType = GlobalStateContext
-
   constructor (props) {
     super(props)
+    let url = window.location.pathname.split('/')
+    let linkForm = null
+    if(url.length === 3){
+      linkForm = url[2]
+    }
     this.state = {
+      linkForm: linkForm,
       title: '',
       questions: [{
         id:0,
@@ -45,8 +50,10 @@ class Formulario extends Component {
     this.onSave = this.onSave.bind(this)
     this.loadBoards = this.loadBoards.bind(this)
     this.loadLists = this.loadLists.bind(this)
+    this.loadForm = this.loadForm.bind(this)
   }
 
+  // Seleciona um novo quadro trello.
   onSelectBoard (e) {
     let selected = null
     const selector = e.target
@@ -58,6 +65,7 @@ class Formulario extends Component {
     this.setState({ selectedBoard: selected })
   }
 
+  // Seleciona uma nova lista trello.
   onSelectList (e) {
     let selected = null
     const selector = e.target
@@ -69,6 +77,35 @@ class Formulario extends Component {
     this.setState({ selectedList: selected })
   }
 
+  //Caso esteja sendo usado um formulário como template.
+  loadForm(){
+    const xhr = new XMLHttpRequest()
+    xhr.addEventListener('load', ()=>{
+      const form = JSON.parse(xhr.responseText)
+      console.log(form)
+      let maxQId = 0
+      let maxCId = 0
+      form.questions.map((question)=>{
+        question.id = maxQId
+        maxQId ++
+        question.components.map((component)=>{
+          component.id = maxCId
+          maxQId ++
+        })
+      })
+      this.setState({
+        questions:form.questions,
+        questionsId:maxQId,
+        componentsId:maxCId
+      })
+    })
+    xhr.open('get', process.env.REACT_APP_API + 'users/' + 
+      this.context.user.id + '/forms/' + this.state.linkForm +'?full=true')
+    xhr.setRequestHeader('Authorization', this.context.user.lastToken)
+    xhr.send()
+  }
+
+  // Carrega os quadros trello daquele user.
   loadBoards () {
     const xhr = new XMLHttpRequest()
     xhr.addEventListener('load', () => {
@@ -84,6 +121,7 @@ class Formulario extends Component {
     xhr.send()
   }
 
+  // Carrega as listas trello daquele quadro.
   loadLists () {
     if(!this.state.selectedBoard){
       return 1
@@ -98,6 +136,7 @@ class Formulario extends Component {
     xhr.send()
   }
 
+  // Salva o formulário.
   onSave () {
     const form = {
       title: this.state.title,
@@ -120,18 +159,21 @@ class Formulario extends Component {
     xhr.send(JSON.stringify(form))
   }
 
+  // Modifica o título do formulário.
   onChangeTitle (e) {
     this.setState({
       title: e.target.value
     })
   }
 
+  // Seleciona uma nova questão para adicionar componentes.
   onSelect (e) {
     this.setState({
       selected: e.target.getAttribute('data-id')
     })
   }
 
+  // Adiciona questão ao formulário.
   onAddQuestion () {
     this.state.questions.push({
       id: this.state.questionsId,
@@ -141,6 +183,7 @@ class Formulario extends Component {
     this.setState({ questionsId: this.state.questionsId + 1 })
   }
 
+  // Adiciona um componente a questão selecionada.
   onAddComponent (e, type) {
     if (this.state.selected) {
       this.state.questions.map((question) => {
@@ -158,6 +201,7 @@ class Formulario extends Component {
     }
   }
 
+  // Remove uma questão selecionada do formulário.
   onRemoveQuestion (e) {
     if (this.state.selected && this.state.selected != 0) {
       const questions = []
@@ -182,6 +226,7 @@ class Formulario extends Component {
     }
   }
 
+  // Realiza alteração no componente, caso seja necessário.
   onChangeComponent (id, text) {
     var questions = []
     this.state.questions.map((question) => {
@@ -195,6 +240,7 @@ class Formulario extends Component {
     this.setState({questions:questions})
   }
 
+  // Modifica uma questão para obrigatória/opicional.
   onChangeRequired(e){
     if(this.state.selected && this.state.selected != 0){
       var questions = []
@@ -219,20 +265,27 @@ class Formulario extends Component {
     }
   }
 
+  // Modifica uma questão.
   onChangeQuestion (id, title, component = null) {
+    var questions = []
     this.state.questions.map((question) => {
       if (question.id == id) {
         question.title = title
       }
+      questions.push(question)
     })
+    this.setState({questions:questions})
   }
+
 
   componentDidMount () {
     this.loadBoards()
+    if(this.state.linkForm){
+      this.loadForm()
+    }
   }
 
   componentDidUpdate(){
-    console.log(this.state)
     if(this.state.selectedList &&
       this.state.selectedList.idBoard !=
       this.state.selectedBoard.id){
