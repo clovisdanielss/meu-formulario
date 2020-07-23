@@ -19,7 +19,11 @@ class Formularios extends Component {
   }
 
   onSelect(e) {
-    console.log("Teste", e.currentTarget.id,  e.currentTarget.getAttribute("data-id"));
+    console.log(
+      "Teste",
+      e.currentTarget.id,
+      e.currentTarget.getAttribute("data-id")
+    );
     this.setState({
       itemSelected: e.currentTarget.getAttribute("data-id"),
     });
@@ -29,19 +33,19 @@ class Formularios extends Component {
     this.onEmptySelection();
     var id = this.state.itemSelected;
     var xhr = new XMLHttpRequest();
+    const forms = [];
+    this.state.forms.map((form) => {
+      if (form.id != id) {
+        forms.push(form);
+      }
+    });
+    this.setState({ forms: forms, itemSelected: null });
     xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
         if (xhr.status === 204) {
-          alert("Removido com sucesso!");
-          const forms = [];
-          this.state.forms.map((form) => {
-            if (form.id != id) {
-              forms.push(form);
-            }
-          });
-          this.setState({ forms: forms });
+          console.log("Removido com sucesso!");
         } else {
-          alert("Falha em remover!");
+          console.log("Falha em remover!");
         }
       }
     };
