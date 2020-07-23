@@ -43,7 +43,6 @@ class FormularioReadOnly extends Component {
         }
       }
     })
-    console.log(totalReqs)
     return totalReqs > 0
   }
 
@@ -131,7 +130,6 @@ class FormularioReadOnly extends Component {
   }
 
   componentDidUpdate () {
-    console.log(this.state.answers)
   }
 
   render () {

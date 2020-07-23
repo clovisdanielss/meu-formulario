@@ -1,397 +1,449 @@
-import React, { Component } from 'react'
-import CartaoPergunta from './cartao-pergunta'
-import { Link } from 'react-router-dom'
-import { GlobalStateContext } from '../context'
+import React, { Component } from "react";
+import CartaoPergunta from "./cartao-pergunta";
+import { Link } from "react-router-dom";
+import { GlobalStateContext } from "../context";
 
 class Formulario extends Component {
-  static contextType = GlobalStateContext
-  constructor (props) {
-    super(props)
-    let url = window.location.pathname.split('/')
-    let linkForm = null
-    if(url.length === 3){
-      linkForm = url[2]
+  static contextType = GlobalStateContext;
+  constructor(props) {
+    super(props);
+    let url = window.location.pathname.split("/");
+    let linkForm = null;
+    if (url.length === 3) {
+      linkForm = url[2];
     }
     this.state = {
       linkForm: linkForm,
-      title: '',
-      questions: [{
-        id:0,
-        title:'Nome da Postagem',
-        required:true,
-        components:[
-          {
-            id:0,
-            type:'textarea',
-            text:''
-          } 
-        ]
-      }],
+      title: "",
+      questions: [
+        {
+          id: 0,
+          title: "Nome da Postagem",
+          required: true,
+          components: [
+            {
+              id: 0,
+              type: "textarea",
+              text: "",
+            },
+          ],
+        },
+      ],
       questionsId: 1,
       componentsId: 1,
       selected: null,
       selectedBoard: null,
       selectedList: null,
       boards: [],
-      lists: []
-    }
-    this.onAddQuestion = this.onAddQuestion.bind(this)
-    this.onAddComponent = this.onAddComponent.bind(this)
-    this.onRemoveQuestion = this.onRemoveQuestion.bind(this)
-    this.onSelect = this.onSelect.bind(this)
-    this.onSelectBoard = this.onSelectBoard.bind(this)
-    this.onSelectList = this.onSelectList.bind(this)
+      lists: [],
+    };
+    this.onAddQuestion = this.onAddQuestion.bind(this);
+    this.onAddComponent = this.onAddComponent.bind(this);
+    this.onRemoveQuestion = this.onRemoveQuestion.bind(this);
+    this.onSelect = this.onSelect.bind(this);
+    this.onSelectBoard = this.onSelectBoard.bind(this);
+    this.onSelectList = this.onSelectList.bind(this);
 
-    this.onChangeQuestion = this.onChangeQuestion.bind(this)
-    this.onChangeComponent = this.onChangeComponent.bind(this)
-    this.onChangeTitle = this.onChangeTitle.bind(this)
-    this.onChangeRequired = this.onChangeRequired.bind(this)
+    this.onChangeQuestion = this.onChangeQuestion.bind(this);
+    this.onChangeComponent = this.onChangeComponent.bind(this);
+    this.onChangeTitle = this.onChangeTitle.bind(this);
+    this.onChangeRequired = this.onChangeRequired.bind(this);
 
-    this.onSave = this.onSave.bind(this)
-    this.loadBoards = this.loadBoards.bind(this)
-    this.loadLists = this.loadLists.bind(this)
-    this.loadForm = this.loadForm.bind(this)
+    this.onSave = this.onSave.bind(this);
+    this.loadBoards = this.loadBoards.bind(this);
+    this.loadLists = this.loadLists.bind(this);
+    this.loadForm = this.loadForm.bind(this);
   }
 
   // Seleciona um novo quadro trello.
-  onSelectBoard (e) {
-    let selected = null
-    const selector = e.target
+  onSelectBoard(e) {
+    let selected = null;
+    const selector = e.target;
     this.state.boards.map((board) => {
-      if (board.id === selector.options[selector.selectedIndex].getAttribute('data-id')) {
-        selected = board
+      if (
+        board.id ===
+        selector.options[selector.selectedIndex].getAttribute("data-id")
+      ) {
+        selected = board;
       }
-    })
-    this.setState({ selectedBoard: selected })
+    });
+    this.setState({ selectedBoard: selected });
   }
 
   // Seleciona uma nova lista trello.
-  onSelectList (e) {
-    let selected = null
-    const selector = e.target
+  onSelectList(e) {
+    let selected = null;
+    const selector = e.target;
     this.state.lists.map((list) => {
-      if (list.id === selector.options[selector.selectedIndex].getAttribute('data-id')) {
-        selected = list
+      if (
+        list.id ===
+        selector.options[selector.selectedIndex].getAttribute("data-id")
+      ) {
+        selected = list;
       }
-    })
-    this.setState({ selectedList: selected })
+    });
+    this.setState({ selectedList: selected });
   }
 
   //Caso esteja sendo usado um formulário como template.
-  loadForm(){
-    const xhr = new XMLHttpRequest()
-    xhr.addEventListener('load', ()=>{
-      const form = JSON.parse(xhr.responseText)
-      console.log(form)
-      let maxQId = 0
-      let maxCId = 0
-      form.questions.map((question)=>{
-        question.id = maxQId
-        maxQId ++
-        question.components.map((component)=>{
-          component.id = maxCId
-          maxQId ++
-        })
-      })
+  loadForm() {
+    const xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", () => {
+      const form = JSON.parse(xhr.responseText);
+      let maxQId = 0;
+      let maxCId = 0;
+      form.questions.map((question) => {
+        question.id = maxQId;
+        maxQId++;
+        question.components.map((component) => {
+          component.id = maxCId;
+          maxQId++;
+        });
+      });
       this.setState({
-        questions:form.questions,
-        questionsId:maxQId,
-        componentsId:maxCId
-      })
-    })
-    xhr.open('get', process.env.REACT_APP_API + 'users/' + 
-      this.context.user.id + '/forms/' + this.state.linkForm +'?full=true')
-    xhr.setRequestHeader('Authorization', this.context.user.lastToken)
-    xhr.send()
+        questions: form.questions,
+        questionsId: maxQId,
+        componentsId: maxCId,
+      });
+    });
+    xhr.open(
+      "get",
+      process.env.REACT_APP_API +
+        "users/" +
+        this.context.user.id +
+        "/forms/" +
+        this.state.linkForm +
+        "?full=true"
+    );
+    xhr.setRequestHeader("Authorization", this.context.user.lastToken);
+    xhr.send();
   }
 
   // Carrega os quadros trello daquele user.
-  loadBoards () {
-    const xhr = new XMLHttpRequest()
-    xhr.addEventListener('load', () => {
-      const boards = JSON.parse(xhr.responseText)
+  loadBoards() {
+    const xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", () => {
+      const boards = JSON.parse(xhr.responseText);
       this.setState({
         boards: boards,
-        selectedBoard: boards[0]
-      })
-      this.loadLists()
-    })
-    xhr.open('get', process.env.REACT_APP_API + 'trello/boards')
-    xhr.setRequestHeader('Authorization', this.context.user.lastToken)
-    xhr.send()
+        selectedBoard: boards[0],
+      });
+      this.loadLists();
+    });
+    xhr.open("get", process.env.REACT_APP_API + "trello/boards");
+    xhr.setRequestHeader("Authorization", this.context.user.lastToken);
+    xhr.send();
   }
 
   // Carrega as listas trello daquele quadro.
-  loadLists () {
-    if(!this.state.selectedBoard){
-      return 1
+  loadLists() {
+    if (!this.state.selectedBoard) {
+      return 1;
     }
-    const xhr = new XMLHttpRequest()
-    xhr.addEventListener('load', () => {
-      const lists = JSON.parse(xhr.responseText)
-      this.setState({ lists: lists, selectedList:lists[0] })
-    })
-    xhr.open('get', process.env.REACT_APP_API + 'trello/boards/' + this.state.selectedBoard.id + '/lists')
-    xhr.setRequestHeader('Authorization', this.context.user.lastToken)
-    xhr.send()
+    const xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", () => {
+      const lists = JSON.parse(xhr.responseText);
+      this.setState({ lists: lists, selectedList: lists[0] });
+    });
+    xhr.open(
+      "get",
+      process.env.REACT_APP_API +
+        "trello/boards/" +
+        this.state.selectedBoard.id +
+        "/lists"
+    );
+    xhr.setRequestHeader("Authorization", this.context.user.lastToken);
+    xhr.send();
   }
 
   // Salva o formulário.
-  onSave () {
+  onSave() {
     const form = {
       title: this.state.title,
       idList: this.state.selectedList.id,
-      questions: this.state.questions
-    }
-    const xhr = new XMLHttpRequest()
-    xhr.onreadystatechange = () =>{
-      if(xhr.readyState === 4){
-        if(xhr.status !== 201){
-          alert("Houve um erro!")
-        }else{
-          alert("Salvo com sucesso!")
+      questions: this.state.questions,
+    };
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        if (xhr.status !== 201) {
+          alert("Houve um erro!");
+        } else {
+          alert("Salvo com sucesso!");
         }
       }
-    }
-    xhr.open('post', process.env.REACT_APP_API + 'users/' + this.context.user.id + '/forms')
-    xhr.setRequestHeader('Authorization', this.context.user.lastToken)
-    xhr.setRequestHeader('Content-Type', 'application/json')
-    xhr.send(JSON.stringify(form))
+    };
+    xhr.open(
+      "post",
+      process.env.REACT_APP_API + "users/" + this.context.user.id + "/forms"
+    );
+    xhr.setRequestHeader("Authorization", this.context.user.lastToken);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(form));
   }
 
   // Modifica o título do formulário.
-  onChangeTitle (e) {
+  onChangeTitle(e) {
     this.setState({
-      title: e.target.value
-    })
+      title: e.target.value,
+    });
   }
 
   // Seleciona uma nova questão para adicionar componentes.
-  onSelect (e) {
+  onSelect(e) {
     this.setState({
-      selected: e.target.getAttribute('data-id')
-    })
+      selected: e.target.getAttribute("data-id"),
+    });
   }
 
   // Adiciona questão ao formulário.
-  onAddQuestion () {
+  onAddQuestion() {
     this.state.questions.push({
       id: this.state.questionsId,
-      title: '',
-      components: []
-    })
-    this.setState({ questionsId: this.state.questionsId + 1 })
+      title: "",
+      components: [],
+    });
+    this.setState({ questionsId: this.state.questionsId + 1 });
   }
 
   // Adiciona um componente a questão selecionada.
-  onAddComponent (e, type) {
+  onAddComponent(e, type) {
     if (this.state.selected) {
       this.state.questions.map((question) => {
         if (question.id == this.state.selected) {
           question.components.push({
             id: this.state.componentsId,
             type: type,
-            text: ''
-          })
+            text: "",
+          });
         }
-      })
-      this.setState({ componentsId: this.state.componentsId + 1 })
+      });
+      this.setState({ componentsId: this.state.componentsId + 1 });
     } else {
-      alert('Primeiro selecione uma pergunta')
+      alert("Primeiro selecione uma pergunta");
     }
   }
 
   // Remove uma questão selecionada do formulário.
-  onRemoveQuestion (e) {
+  onRemoveQuestion(e) {
     if (this.state.selected && this.state.selected != 0) {
-      const questions = []
-      let next = null
+      const questions = [];
+      let next = null;
       this.state.questions.map((question, key) => {
         if (question.id != this.state.selected) {
-          questions.push(question)
+          questions.push(question);
         } else if (this.state.questions[key + 1]) {
-          next = this.state.questions[key + 1].id
+          next = this.state.questions[key + 1].id;
         }
-      })
+      });
       this.setState({
         questions: questions,
-        selected: next
-      })
+        selected: next,
+      });
     } else {
-      if(this.state.selected === 0){
-        alert('Esse campo não pode ser removido.')
-      }else{
-        alert('Primeiro selecione uma pergunta')  
+      if (this.state.selected === 0) {
+        alert("Esse campo não pode ser removido.");
+      } else {
+        alert("Primeiro selecione uma pergunta");
       }
     }
   }
 
   // Realiza alteração no componente, caso seja necessário.
-  onChangeComponent (id, text) {
-    var questions = []
+  onChangeComponent(id, text) {
+    var questions = [];
     this.state.questions.map((question) => {
       question.components.map((component) => {
         if (component.id == id) {
-          component.text = text
+          component.text = text;
         }
-      })
-      questions.push(question)
-    })
-    this.setState({questions:questions})
+      });
+      questions.push(question);
+    });
+    this.setState({ questions: questions });
   }
 
   // Modifica uma questão para obrigatória/opicional.
-  onChangeRequired(e){
-    if(this.state.selected && this.state.selected != 0){
-      var questions = []
-      this.state.questions.map((question)=>{
-        if(question.id == this.state.selected){
-          if(!question.required){
-            question.required = true
-          }else{
-            question.required = false
+  onChangeRequired(e) {
+    if (this.state.selected && this.state.selected != 0) {
+      var questions = [];
+      this.state.questions.map((question) => {
+        if (question.id == this.state.selected) {
+          if (!question.required) {
+            question.required = true;
+          } else {
+            question.required = false;
           }
         }
-        questions.push(question)
-      })
-      this.setState({questions:questions})
-    }
-    else{
-      if(this.state.selected === 0){
-        alert('Esse campo não pode ser removido.')
-      }else{
-        alert('Primeiro selecione uma pergunta')  
+        questions.push(question);
+      });
+      this.setState({ questions: questions });
+    } else {
+      if (this.state.selected === 0) {
+        alert("Esse campo não pode ser removido.");
+      } else {
+        alert("Primeiro selecione uma pergunta");
       }
     }
   }
 
   // Modifica uma questão.
-  onChangeQuestion (id, title, component = null) {
-    var questions = []
+  onChangeQuestion(id, title, component = null) {
+    var questions = [];
     this.state.questions.map((question) => {
       if (question.id == id) {
-        question.title = title
+        question.title = title;
       }
-      questions.push(question)
-    })
-    this.setState({questions:questions})
+      questions.push(question);
+    });
+    this.setState({ questions: questions });
   }
 
-
-  componentDidMount () {
-    this.loadBoards()
-    if(this.state.linkForm){
-      this.loadForm()
+  componentDidMount() {
+    this.loadBoards();
+    if (this.state.linkForm) {
+      this.loadForm();
     }
   }
 
-  componentDidUpdate(){
-    if(this.state.selectedList &&
-      this.state.selectedList.idBoard !=
-      this.state.selectedBoard.id){
-      this.loadLists()
+  componentDidUpdate() {
+    if (
+      this.state.selectedList &&
+      this.state.selectedList.idBoard != this.state.selectedBoard.id
+    ) {
+      this.loadLists();
     }
   }
 
-  render () {
+  render() {
     return (
-      <div>
-        <div className='menu-form'>
-          <div>
-            <h3>
-              Menu
-            </h3>
-          </div>
-          <hr />
-          <div>
-              <h3>Selecione o quadro do trelo desejado:</h3>
-              <select onChange={this.onSelectBoard}>
+      <div className="conteiner-fluid">
+        <div className="row">
+          <div className="col-md-4">
+            <div className="flex-center justify-center">
+              <h3>Menu</h3>
+            </div>
+            <hr />
+            <div className="input-group mb-3">
+              <div className="input-group-prepend">
+                <label className="input-group-text" htmlFor="trelloboard">
+                  Quadro Trello:
+                </label>
+              </div>
+              <select
+                className="custom-select"
+                id="trelloboard"
+                onChange={this.onSelectBoard}
+              >
                 {this.state.boards.map((board, key) => {
                   return (
                     <option key={key} data-id={board.id}>
                       {board.name}
                     </option>
-                  )
+                  );
                 })}
               </select>
             </div>
-            {this.state.selectedBoard ? <div>
-              <h3>Selecione a lista do quadro:</h3>
-              <select onChange={this.onSelectList}>
-                {this.state.lists.map((list, key) => {
-                  return (
-                    <option key={key} data-id={list.id}>
-                      {list.name}
-                    </option>
-                  )
-                })}
-              </select>
-                                        </div> : null}
-          <div className='menu-div-buttons'>
-            <div>
-              <button onClick={this.onAddQuestion}>
-              Adicionar cartão pergunta
-              </button>
-              <button onClick={this.onRemoveQuestion}>
-              Remover cartão pergunta
-              </button>
-              <button onClick={(e) => { this.onAddComponent(e, 'textarea') }}>
-              Adicionar textarea
-              </button>
-            </div>
-            <div>
-              <button onClick={(e) => { this.onAddComponent(e, 'checkbox') }}>
-              Adicionar checkbox
-              </button>
-              <button onClick={(e) => { this.onAddComponent(e, 'radio') }}>
-              Adicionar radiobox
-              </button>
-              <button onClick={(e) => { this.onAddComponent(e, 'date') }}>
-              Adicionar campo data
-              </button>
-            </div>
-            <div>
-              <button onClick={(e) => { this.onAddComponent(e, 'file') }}>
-              Adicionar carregar arquivo
-              </button>
-              <Link to='/formularios' onClick={this.onSave}>
-                <button>
-              Salvar
+            {this.state.selectedBoard ? (
+              <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                  <label className="input-group-text" htmlFor="trellolist">
+                    Lista Trello:
+                  </label>
+                </div>
+                <select onChange={this.onSelectList} className="custom-select">
+                  {this.state.lists.map((list, key) => {
+                    return (
+                      <option key={key} data-id={list.id}>
+                        {list.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+            ) : null}
+            <div className="flex-center">
+              <div className="flex-vertical">
+                <button className="button-menu" onClick={this.onAddQuestion}>
+                  Adicionar cartão pergunta
                 </button>
-              </Link>
-              <button onClick={this.onChangeRequired}>
-                (Des)definir questão obrigatória
-              </button>
+                <button className="button-menu" onClick={this.onRemoveQuestion}>
+                  Remover cartão pergunta
+                </button>
+                <button className="button-menu"
+                  onClick={(e) => {
+                    this.onAddComponent(e, "textarea");
+                  }}
+                >
+                  Adicionar textarea
+                </button>
+              </div>
+              <div className="flex-vertical">
+                <button className="button-menu"
+                  onClick={(e) => {
+                    this.onAddComponent(e, "checkbox");
+                  }}
+                >
+                  Adicionar checkbox
+                </button>
+                <button className="button-menu"
+                  onClick={(e) => {
+                    this.onAddComponent(e, "radio");
+                  }}
+                >
+                  Adicionar radiobox
+                </button>
+                <button className="button-menu"
+                  onClick={(e) => {
+                    this.onAddComponent(e, "date");
+                  }}
+                >
+                  Adicionar campo data
+                </button>
+              </div>
+              <div className="flex-vertical">
+                <button className="button-menu"
+                  onClick={(e) => {
+                    this.onAddComponent(e, "file");
+                  }}
+                >
+                  Adicionar carregar arquivo
+                </button>
+                <Link to="/formularios" onClick={this.onSave}>
+                  <button className="button-menu">Salvar</button>
+                </Link>
+                <button className="button-menu" onClick={this.onChangeRequired}>
+                  (Des)definir questão obrigatória
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div className='editor-form'>
-          <div>
-            <h3>
-              Título
-            </h3>
-            <input onChange={this.onChangeTitle} />
-          </div>
-          <hr />
-          <div className='form'>
-            {this.state.questions.map((question, key) => {
-              return (
-                <CartaoPergunta
-                  question={question}
-                  index={key}
-                  key={key}
-                  onSelect={this.onSelect}
-                  onChangeQuestion={this.onChangeQuestion}
-                  onChangeComponent={this.onChangeComponent}
-                  question={question}
-                />
-              )
-            })}
+          <div className="col-md-8">
+            <div className="flex-center justify-center">
+              <h3>Título</h3>
+              <input onChange={this.onChangeTitle} />
+            </div>
+            <hr />
+            <div className="form">
+              {this.state.questions.map((question, key) => {
+                return (
+                  <CartaoPergunta
+                    question={question}
+                    index={key}
+                    key={key}
+                    onSelect={this.onSelect}
+                    onChangeQuestion={this.onChangeQuestion}
+                    onChangeComponent={this.onChangeComponent}
+                    question={question}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default Formulario
+export default Formulario;

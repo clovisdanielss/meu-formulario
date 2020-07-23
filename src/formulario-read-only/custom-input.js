@@ -41,7 +41,7 @@ class CustomInput extends Component {
         const buffer = Buffer.from(e.target.result).toJSON().data
         var answer = {
           idQuestion: props.idQuestion,
-          value: { data: buffer, name: file.name },
+          value: { data: buffer, name: file.name, mimeType:file.type },
           idComponent: props.component.id,
           titleQuestion: props.titleQuestion,
           type: props.component.type

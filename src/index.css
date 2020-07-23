@@ -72,10 +72,19 @@ textarea{
   margin-right: 10px;
   vertical-align: bottom;
 }
-.table-search{
-  float: right;
+
+.input-group-text{
+  width: 130px;
+}
+.flex-vertical{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
+.selected{
+  background-color: rgba(0,200,200,.3);
+}
 
 .container{
   width: 98%;
@@ -95,7 +104,7 @@ textarea{
 .table-div{
   position: relative;
   overflow-y: auto;
-  height: 150px;
+  height: 500px;
 }
 
 table{
@@ -153,8 +162,14 @@ button{
   width: 100px;
 }
 
-.menu-form button{
+.button-menu{
+  width: auto;
+}
+
+.flex-vertical>button,
+.flex-vertical>a>button{
   height: 90px;
+  width: 100%;
 }
 
 .editor-form{
@@ -180,6 +195,29 @@ button{
 
 .datetime>div{
   width: 100%;
+}
+
+
+.flex-center{
+  display: flex !important;
+  align-items: center;
+}
+
+.justify-center{
+  justify-content: center;
+}
+
+.justify-end{
+  justify-content: end;
+}
+
+
+i{
+  color:rgb(0, 121, 191) !important
+}
+
+.icon{
+  height: 80px!important;
 }
 
 @media(max-width:850px){
@@ -210,9 +248,5 @@ button{
   .menu-table{
     justify-content: space-between;
     display: flex;
-  }
-  .table-search{
-    float: none;
-    display: grid;
   }
 }
