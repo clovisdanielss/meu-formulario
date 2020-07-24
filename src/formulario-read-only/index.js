@@ -157,7 +157,7 @@ class FormularioReadOnly extends Component {
             })}
           </div>
           <div>
-            <button onClick={this.onSend}>Enviar</button>
+            <button className="btn-block btn-lg" onClick={this.onSend}>Enviar</button>
           </div>
         </div>
       ]
