@@ -12,54 +12,9 @@ code {
     monospace;
 }
 
-.auto-generated{
-  width: 550px;
-  margin: auto;
-}
-
-.auto-generated+div{
-  width: 550px;
-  margin: auto;
-}
-.auto-generated+div>button{
-  width: 100%;
-}
-
-.div-right{
-  width: 90%;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.div-left{
-  width: 10%;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-
-.question-label{
-  display: block;
-}
-
-.question-text-div>h3{
-  display: inline;
-}
-.question-text-div,.question-component-div{
-  margin-bottom: 10px;
-}
-
-input{
-  height: 30px;
-}
 
 button{
   height: 52px;
-}
-
-
-.input-text{
-  width: calc(100% - 16px);
 }
 
 textarea{
@@ -73,32 +28,28 @@ textarea{
   vertical-align: bottom;
 }
 
-.input-group-text{
-  width: 130px;
-}
 .flex-vertical{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 100%;
 }
 
 .selected{
-  background-color: rgba(0,200,200,.3);
+  background-color: rgba(0,200,200,.1);
+  
+
+}
+tr{
+  transition: background-color .5s;
 }
 
-.container{
-  width: 98%;
-  margin: auto;
+a:hover{
+  text-decoration: none;
 }
 
-.editor-form{
-  position: relative;
-    overflow-y: auto;
-  height: 720px;
-}
-.form{
-  position: absolute;
-  width: 100%;
+.w-half{
+  width: 50%;
 }
 
 .table-div{
@@ -136,27 +87,6 @@ th{
   width: 100%;
 }
 
-.menu-form,.editor-form{
-  text-align: center;
-  display: inline-block;
-}
-.menu-form>div>select{
-  width: 90%;
-}
-.menu-form>div{
-  margin-bottom: 15px;
-}
-.menu-div-buttons{
-  margin-top: 15px;
-}
-
-.editor-form>div>input,
-.editor-form>div>h3{
-  display: inline-block;
-}
-.editor-form>div+hr{
-  margin-top: 0px;
-}
 
 button{
   width: 100px;
@@ -172,14 +102,6 @@ button{
   width: 100%;
 }
 
-.editor-form{
-  width:calc(100% - 300px);
-  vertical-align: top;
-}
-
-.menu-div-buttons{
-  display: flex;
-}
 .menu-form{
   width: 300px;
 }
@@ -220,25 +142,9 @@ i{
   height: 80px!important;
 }
 
-@media(max-width:850px){
-  .menu-form,.editor-form{
-    display: block;
-    width: 100%;
-  }
 
-  .menu-form{
-    border-bottom-style: solid;
-    border-color:#666666;
-    border-bottom-width: 2px;
-    padding-bottom: 8px;
-  }
-  .auto-generated{
-    width: 95%;
-    padding: auto;
-  }
-  .auto-generated+div{
-    width: 95%;
-  }
+@media(max-width:850px){
+ 
   #login{
     width: 100%;
   }

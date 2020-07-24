@@ -19,11 +19,6 @@ class Formularios extends Component {
   }
 
   onSelect(e) {
-    console.log(
-      "Teste",
-      e.currentTarget.id,
-      e.currentTarget.getAttribute("data-id")
-    );
     this.setState({
       itemSelected: e.currentTarget.getAttribute("data-id"),
     });
@@ -113,7 +108,7 @@ class Formularios extends Component {
               ? [
                   <div className="table-button" key={0}>
                     <Link to={this.onEditPath}>
-                      <button className="flex-center justify-center test">
+                      <button className="flex-center justify-center">
                         Copiar
                         <i className="far fa-copy ml-2"></i>
                       </button>
@@ -121,7 +116,7 @@ class Formularios extends Component {
                   </div>,
                   <div className="table-button" key={1}>
                     <Link onClick={this.onRemove} to="/formularios">
-                      <button className="flex-center justify-center test">
+                      <button className="flex-center justify-center">
                         Remover
                         <i className="far fa-trash-alt ml-2"></i>
                       </button>

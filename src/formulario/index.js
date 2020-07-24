@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import CartaoPergunta from "./cartao-pergunta";
-import { Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { GlobalStateContext } from "../context";
 
 class Formulario extends Component {
@@ -32,6 +32,8 @@ class Formulario extends Component {
       questionsId: 1,
       componentsId: 1,
       selected: null,
+      alert: false,
+      success: false,
       selectedBoard: null,
       selectedList: null,
       boards: [],
@@ -158,19 +160,33 @@ class Formulario extends Component {
 
   // Salva o formulário.
   onSave() {
+    if (this.state.title == "") {
+      this.setState({ alert: "Coloque um título no formulário" });
+      setTimeout(() => {
+        this.setState({ alert: false });
+      }, 2000);
+      return;
+    }
     const form = {
       title: this.state.title,
       idList: this.state.selectedList.id,
       questions: this.state.questions,
     };
+    this.setState({ success: { waiting: true }, alert: "Aguarde..." });
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         if (xhr.status !== 201) {
-          alert("Houve um erro!");
+          this.setState({
+            alert: "Houve um erro! Tente novamente.",
+            success: false,
+          });
         } else {
-          alert("Salvo com sucesso!");
+          this.setState({ alert: "Salvo com successo!", success: true });
         }
+        setTimeout(() => {
+          this.setState({ alert: false, success: { redirect: true } });
+        }, 2000);
       }
     };
     xhr.open(
@@ -191,8 +207,9 @@ class Formulario extends Component {
 
   // Seleciona uma nova questão para adicionar componentes.
   onSelect(e) {
+    console.log(e.currentTarget.getAttribute("data-id"), this.state.selected);
     this.setState({
-      selected: e.target.getAttribute("data-id"),
+      selected: e.currentTarget.getAttribute("data-id"),
     });
   }
 
@@ -208,7 +225,7 @@ class Formulario extends Component {
 
   // Adiciona um componente a questão selecionada.
   onAddComponent(e, type) {
-    if (this.state.selected) {
+    if (this.state.selected && this.state.selected != 0) {
       this.state.questions.map((question) => {
         if (question.id == this.state.selected) {
           question.components.push({
@@ -220,7 +237,16 @@ class Formulario extends Component {
       });
       this.setState({ componentsId: this.state.componentsId + 1 });
     } else {
-      alert("Primeiro selecione uma pergunta");
+      if (this.state.selected == 0) {
+        this.setState({
+          alert: "Não é possível adicionar componentes a esta pergunta.",
+        });
+      } else {
+        this.setState({ alert: "Primeiro, selecione uma pergunta." });
+      }
+      setTimeout(() => {
+        this.setState({ alert: false });
+      }, 2000);
     }
   }
 
@@ -241,11 +267,14 @@ class Formulario extends Component {
         selected: next,
       });
     } else {
-      if (this.state.selected === 0) {
-        alert("Esse campo não pode ser removido.");
+      if (this.state.selected == 0) {
+        this.setState({ alert: "Esse campo não pode ser removido." });
       } else {
-        alert("Primeiro selecione uma pergunta");
+        this.setState({ alert: "Primeiro, selecione uma pergunta." });
       }
+      setTimeout(() => {
+        this.setState({ alert: false });
+      }, 2000);
     }
   }
 
@@ -279,11 +308,14 @@ class Formulario extends Component {
       });
       this.setState({ questions: questions });
     } else {
-      if (this.state.selected === 0) {
-        alert("Esse campo não pode ser removido.");
+      if (this.state.selected == 0) {
+        this.setState({ alert: "Esse campo deve ser obrigatório!" });
       } else {
-        alert("Primeiro selecione uma pergunta");
+        this.setState({ alert: "Primeiro, selecione uma pergunta." });
       }
+      setTimeout(() => {
+        this.setState({ alert: false });
+      }, 2000);
     }
   }
 
@@ -316,15 +348,17 @@ class Formulario extends Component {
   }
 
   render() {
+    if (this.state.success.redirect) {
+      return <Redirect to="/formularios"></Redirect>;
+    }
     return (
       <div className="conteiner-fluid">
         <div className="row">
-          <div className="col-md-4">
+          <div className="col-md-4 mb-3">
             <div className="flex-center justify-center">
               <h3>Menu</h3>
             </div>
-            <hr />
-            <div className="input-group mb-3">
+            <div className="input-group mb-3 p-2">
               <div className="input-group-prepend">
                 <label className="input-group-text" htmlFor="trelloboard">
                   Quadro Trello:
@@ -345,7 +379,7 @@ class Formulario extends Component {
               </select>
             </div>
             {this.state.selectedBoard ? (
-              <div className="input-group mb-3">
+              <div className="input-group mb-3 p-2">
                 <div className="input-group-prepend">
                   <label className="input-group-text" htmlFor="trellolist">
                     Lista Trello:
@@ -362,69 +396,122 @@ class Formulario extends Component {
                 </select>
               </div>
             ) : null}
-            <div className="flex-center">
+            <div className="flex-center p-2">
               <div className="flex-vertical">
-                <button className="button-menu" onClick={this.onAddQuestion}>
-                  Adicionar cartão pergunta
+                <button
+                  className="flex-center justify-center"
+                  onClick={this.onAddQuestion}
+                >
+                  <div className="w-half">Adicionar Pergunta</div>
+
+                  <i class="far fa-plus-square ml-2"></i>
                 </button>
-                <button className="button-menu" onClick={this.onRemoveQuestion}>
-                  Remover cartão pergunta
+
+                <button
+                  className="flex-center justify-center"
+                  onClick={this.onRemoveQuestion}
+                >
+                  <div className="w-half"> Remover Pergunta</div>
+                  <i className="far fa-trash-alt ml-2"></i>
                 </button>
-                <button className="button-menu"
+
+                <button
+                  className="flex-center justify-center"
                   onClick={(e) => {
                     this.onAddComponent(e, "textarea");
                   }}
                 >
-                  Adicionar textarea
+                  <div className="w-half"> Textarea</div>
+                  <i class="fas fa-underline ml-2"></i>
                 </button>
               </div>
               <div className="flex-vertical">
-                <button className="button-menu"
+                <button
+                  className="flex-center justify-center"
                   onClick={(e) => {
                     this.onAddComponent(e, "checkbox");
                   }}
                 >
-                  Adicionar checkbox
+                  <div className="w-half"> Checkbox </div>
+
+                  <i className="far fa-check-square ml-2"></i>
                 </button>
-                <button className="button-menu"
+                <button
+                  className="flex-center justify-center"
                   onClick={(e) => {
                     this.onAddComponent(e, "radio");
                   }}
                 >
-                  Adicionar radiobox
+                  <div className="w-half">Radiobox</div>
+
+                  <i className="far fa-check-circle ml-2 "></i>
                 </button>
-                <button className="button-menu"
+                <button
+                  className="flex-center justify-center"
                   onClick={(e) => {
                     this.onAddComponent(e, "date");
                   }}
                 >
-                  Adicionar campo data
+                  <div className="w-half"> Campo data </div>
+                  <i class="far fa-calendar-alt ml-2"></i>
                 </button>
               </div>
               <div className="flex-vertical">
-                <button className="button-menu"
+                <button
+                  className="flex-center justify-center"
                   onClick={(e) => {
                     this.onAddComponent(e, "file");
                   }}
                 >
-                  Adicionar carregar arquivo
+                  <div className="w-half">Carregar Arquivo</div>
+                  <i class="fas fa-upload ml-2"></i>
                 </button>
-                <Link to="/formularios" onClick={this.onSave}>
-                  <button className="button-menu">Salvar</button>
-                </Link>
-                <button className="button-menu" onClick={this.onChangeRequired}>
-                  (Des)definir questão obrigatória
+
+                <button
+                  className="flex-center justify-center"
+                  onClick={this.onSave}
+                >
+                  <div className="w-half">Salvar</div>
+                  <i class="far fa-save ml-2"></i>
+                </button>
+
+                <button
+                  className="flex-center justify-center"
+                  onClick={this.onChangeRequired}
+                >
+                  <div className="w-half">Obrigatória</div>
+                  <i class="fas fa-star-of-life ml-2"></i>
                 </button>
               </div>
             </div>
+            {this.state.alert ? (
+              <div
+                className={
+                  this.state.success.waiting
+                    ? "alert alert m-2 alert-warning"
+                    : this.state.success
+                    ? "alert alert m-2 alert-success"
+                    : "alert alert m-2 alert-danger"
+                }
+              >
+                {this.state.alert}
+              </div>
+            ) : null}
           </div>
           <div className="col-md-8">
-            <div className="flex-center justify-center">
-              <h3>Título</h3>
-              <input onChange={this.onChangeTitle} />
+            <div className="flex-center justify-center mb-3">
+              <h3>Título: </h3>
+              <input
+                onChange={this.onChangeTitle}
+                className="ml-3"
+                style={{
+                  borderWidth: "0px 0px 1px",
+                  fontSize: "30px",
+                  width: "50%",
+                }}
+              />
             </div>
-            <hr />
-            <div className="form">
+            <div className="">
               {this.state.questions.map((question, key) => {
                 return (
                   <CartaoPergunta
@@ -432,6 +519,7 @@ class Formulario extends Component {
                     index={key}
                     key={key}
                     onSelect={this.onSelect}
+                    selected={this.state.selected == question.id}
                     onChangeQuestion={this.onChangeQuestion}
                     onChangeComponent={this.onChangeComponent}
                     question={question}
