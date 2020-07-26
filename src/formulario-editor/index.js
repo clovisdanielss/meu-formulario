@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import CartaoPergunta from "./cartao-pergunta";
 import { Redirect } from "react-router-dom";
 import { GlobalStateContext } from "../context";
+import Tooltips from "./tooltips";
 
 class Formulario extends Component {
   static contextType = GlobalStateContext;
@@ -353,12 +354,13 @@ class Formulario extends Component {
     }
     return (
       <div className="conteiner-fluid">
+        <Tooltips />
         <div className="row">
-          <div className="col-md-4 mb-3">
+          <div className="col-md-4 mb-3 br-white transition-mw">
             <div className="flex-center justify-center">
               <h3>Menu</h3>
             </div>
-            <div className="input-group mb-3 p-2">
+            <div className="input-group mb-3 p-2" data-tip data-for="trelloselector">
               <div className="input-group-prepend">
                 <label className="input-group-text" htmlFor="trelloboard">
                   Quadro Trello:
@@ -379,9 +381,9 @@ class Formulario extends Component {
               </select>
             </div>
             {this.state.selectedBoard ? (
-              <div className="input-group mb-3 p-2">
+              <div className="input-group mb-3 p-2" data-tip data-for="listselector">
                 <div className="input-group-prepend">
-                  <label className="input-group-text" htmlFor="trellolist">
+                  <label className="input-group-text">
                     Lista Trello:
                   </label>
                 </div>
@@ -399,88 +401,81 @@ class Formulario extends Component {
             <div className="flex-center p-2">
               <div className="flex-vertical">
                 <button
-                  className="flex-center justify-center"
+                  data-tip
+                  data-for="addquestion"
                   onClick={this.onAddQuestion}
                 >
-                  <div className="w-half">Adicionar Pergunta</div>
-
-                  <i class="far fa-plus-square ml-2"></i>
+                  <i className="far fa-plus-square sz-30"></i>
                 </button>
-
                 <button
-                  className="flex-center justify-center"
+                  data-tip
+                  data-for="rmvquestion"
                   onClick={this.onRemoveQuestion}
                 >
-                  <div className="w-half"> Remover Pergunta</div>
-                  <i className="far fa-trash-alt ml-2"></i>
+                  <i className="far fa-trash-alt sz-30"></i>
                 </button>
 
                 <button
-                  className="flex-center justify-center"
+                  data-tip
+                  data-for="addcheckbox"
                   onClick={(e) => {
                     this.onAddComponent(e, "textarea");
                   }}
                 >
-                  <div className="w-half"> Textarea</div>
-                  <i class="fas fa-underline ml-2"></i>
+                  <i className="fas fa-underline sz-30"></i>
                 </button>
               </div>
               <div className="flex-vertical">
                 <button
-                  className="flex-center justify-center"
+                  data-tip
+                  data-for="addcheckbox"
                   onClick={(e) => {
                     this.onAddComponent(e, "checkbox");
                   }}
                 >
-                  <div className="w-half"> Checkbox </div>
-
-                  <i className="far fa-check-square ml-2"></i>
+                  <i className="far fa-check-square sz-30"></i>
                 </button>
                 <button
-                  className="flex-center justify-center"
+                  data-tip
+                  data-for="addradiobox"
                   onClick={(e) => {
                     this.onAddComponent(e, "radio");
                   }}
                 >
-                  <div className="w-half">Radiobox</div>
-
-                  <i className="far fa-check-circle ml-2 "></i>
+                  <i className="far fa-check-circle sz-30 "></i>
                 </button>
                 <button
-                  className="flex-center justify-center"
+                  data-tip
+                  data-for="adddate"
                   onClick={(e) => {
                     this.onAddComponent(e, "date");
                   }}
                 >
-                  <div className="w-half"> Campo data </div>
-                  <i class="far fa-calendar-alt ml-2"></i>
+                  <i className="far fa-calendar-alt sz-30"></i>
                 </button>
               </div>
               <div className="flex-vertical">
                 <button
-                  className="flex-center justify-center"
+                  data-tip
+                  data-for="addfile"
                   onClick={(e) => {
                     this.onAddComponent(e, "file");
                   }}
                 >
-                  <div className="w-half">Carregar Arquivo</div>
-                  <i class="fas fa-upload ml-2"></i>
+                  <i className="fas fa-upload sz-30"></i>
                 </button>
 
-                <button
-                  className="flex-center justify-center"
-                  onClick={this.onSave}
-                >
-                  <div className="w-half">Salvar</div>
-                  <i class="far fa-save ml-2"></i>
+                <button onClick={this.onSave} data-tip data-for="save">
+                  <i className="far fa-save sz-30"></i>
                 </button>
 
                 <button
                   className="flex-center justify-center"
                   onClick={this.onChangeRequired}
+                  data-tip
+                  data-for="mandatory"
                 >
-                  <div className="w-half">Obrigatória</div>
-                  <i class="fas fa-star-of-life ml-2"></i>
+                  <i className="fas fa-star-of-life sz-30"></i>
                 </button>
               </div>
             </div>
@@ -499,7 +494,7 @@ class Formulario extends Component {
             ) : null}
           </div>
           <div className="col-md-8">
-            <div className="flex-center justify-center mb-3">
+            <div className="flex-center justify-center mb-3" data-tip data-for="titledescription">
               <h3>Título: </h3>
               <input
                 onChange={this.onChangeTitle}
@@ -511,7 +506,7 @@ class Formulario extends Component {
                 }}
               />
             </div>
-            <div className="">
+            <div className="" data-tip data-for="questiondescription">
               {this.state.questions.map((question, key) => {
                 return (
                   <CartaoPergunta

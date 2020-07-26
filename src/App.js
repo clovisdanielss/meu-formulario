@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import Login from './login/index.js'
 import Formularios from './formularios'
 import Logged from './login/logged.js'
-import Formulario from './formulario'
+import Formulario from './formulario-editor'
 import Header from './header'
 import { BrowserRouter as Router, Switch, Route, Redirect, Link } from 'react-router-dom'
-import FormularioReadOnly from './formulario-read-only'
+import FormularioReadOnly from './formulario-default'
 import { GlobalStateContext } from './context'
 
 const Protected = ({ children, ...rest }) => {
